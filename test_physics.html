@@ -1,4 +1,4 @@
-<p><canvas id="canvas" width="200" height="200"></p>
+<p><canvas style="width: 600px; display: block; margin: 50px auto; border: 1px solid #000;" id="canvas" width="600" height="800"></p>
 
 <script type="text/javascript" src="./physics.js"></script>
 <script type="text/javascript" src="./physicsSpec.js"></script>
@@ -63,13 +63,13 @@ function update()
       player.y = ground.y - 10;
     }
 
-    onGround = (player.y === (ground.y - 10));
+    onGround = (player.y === (ground.y - 10) && (player.x < ground.x + ground.width));
 
 }
 
 function render(entity)
 {
-    ctx.clearRect(0, 0, 200, 200);
+    ctx.clearRect(0, 0, 600, 800);
     ctx.stroke();
     ctx.beginPath();
     ctx.rect(entity.x, entity.y, entity.width, entity.height);
