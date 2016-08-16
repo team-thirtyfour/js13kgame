@@ -9,6 +9,7 @@ A simple game where you play a square trying to find its way out different level
 > npm run dev
 > open index.html in browser
 
-## Release
+## Build and Release
 
-> npm build
+> npm run build
+> npm run release

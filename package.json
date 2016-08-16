@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "watch 'npm run devjs' ./src",
     "devjs": "rollup -c -o dist/bundle.js && babel dist/bundle.js | indexhtmlify --title js13kgame --style src/main.css > index.html",
-    "build": "rollup -c -o dist/bundle.js && babel dist/bundle.js | uglifyjs -cm | indexhtmlify --title js13kgame --style src/main.css > index.html"
+    "build": "rollup -c -o dist/bundle.js && babel dist/bundle.js | uglifyjs -cm | indexhtmlify --title js13kgame --style src/main.css > index.html",
+    "release": "gzip -9 -c index.html > game.gz"
   },
   "repository": {
     "type": "git",
