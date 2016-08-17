@@ -4,8 +4,8 @@
   "description": "Glitch or die trying",
   "main": "src/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "watch 'npm run devjs' ./src",
+    "test": "rollup -i src/mainSpec.js -o dist/bundle-tests.js && babel dist/bundle-tests.js --out-file dist/bundle-tests-es5.js",
+    "dev": "watch 'npm run test && npm run devjs' ./src",
     "devjs": "rollup -c -o dist/bundle.js && babel dist/bundle.js | indexhtmlify --title js13kgame --style src/main.css > index.html",
     "build": "rollup -c -o dist/bundle.js && babel dist/bundle.js | uglifyjs -cm | indexhtmlify --title js13kgame --style src/main.css | html-minifier --minify-css > index.html",
     "release": "gzip -9 -c index.html > game.gz"
