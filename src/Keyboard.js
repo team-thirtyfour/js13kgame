@@ -1,36 +1,61 @@
-const UP_KEYCODE = 38;
-const LEFT_KEYCODE = 37;
-const RIGHT_KEYCODE = 39;
 
-export default class Keyboard {
+export const KeyboardCsts = {
+  UP_KEYCODE: 38,
+  LEFT_KEYCODE: 37,
+  RIGHT_KEYCODE: 39
+}
 
+let upPressed = false;
+let leftPressed = false;
+let rightPressed = false;
 
-  constructor(){
+export class Keyboard {
 
-    this.upPressed = false;
-    this.leftPressed = false;
-    this.rightPressed = false;
-
-    document.addEventListener("keydown", this._keyDownHandler, false);
-    document.addEventListener("keyup", this._keyUpHandler, false);
+  static _keyDownHandler(e){
+    switch(e.keyCode){
+      case KeyboardCsts.UP_KEYCODE:
+        upPressed = true;
+        break;
+      case KeyboardCsts.LEFT_KEYCODE:
+        leftPressed = true;
+        break;
+      case KeyboardCsts.RIGHT_KEYCODE:
+        rightPressed = true;
+        break;
+      default:
+        break;
+    }
   }
 
-  _keyDownHandler(e){
-    if(e.keyCode === UP_KEYCODE) this.upPressed = true;
-    else if(e.keyCode === LEFT_KEYCODE) this.leftPressed = true;
-    else if (e.keyCode === RIGHT_KEYCODE) this.rightPressed = true;
+  static _keyUpHandler(e){
+    switch(e.keyCode){
+      case KeyboardCsts.UP_KEYCODE:
+        upPressed = false;
+        break;
+      case KeyboardCsts.LEFT_KEYCODE:
+        leftPressed = false;
+        break;
+      case KeyboardCsts.RIGHT_KEYCODE:
+        rightPressed = false;
+        break;
+      default:
+        break;
+    }
   }
 
-  _keyUpHandler(e){
-    if(e.keyCode === UP_KEYCODE) this.upPressed = false;
-    else if(e.keyCode === LEFT_KEYCODE) this.leftPressed = false;
-    else if (e.keyCode === RIGHT_KEYCODE) this.rightPressed = false;
+  static isKeyPressed(keyCode){
+    switch(keyCode){
+      case KeyboardCsts.UP_KEYCODE:
+        return upPressed;
+        break;
+      case KeyboardCsts.LEFT_KEYCODE:
+        return leftPressed;
+        break;
+      case KeyboardCsts.RIGHT_KEYCODE:
+        return rightPressed;
+        break;
+      default:
+        break;
+    }
   }
-
-  isKeyPressed(keyCode){
-    if(keyCode === UP_KEYCODE) return this.UP_KEYCODE;
-    else if (keyCode === LEFT_KEYCODE) return this.LEFT_KEYCODE;
-    else if (keyCode === RIGHT_KEYCODE) return this.RIGHT_KEYCODE;
-  }
-
 }
