@@ -2,3 +2,11 @@ html, body {
     display: block;
     height: 100%;
 }
+
+#canvas{
+  width: 600px;
+  height: 800px;
+  display: block;
+  border: 1px solid #000;
+  margin: 50px auto;
+}

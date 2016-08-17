@@ -58,4 +58,8 @@ export class Keyboard {
         break;
     }
   }
+
 }
+
+window.addEventListener('keydown', Keyboard._keyDownHandler, false);
+window.addEventListener('keyup', Keyboard._keyUpHandler, false);
