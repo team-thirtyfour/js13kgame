@@ -2,19 +2,7 @@ const DEFAULT_GRAVITY = 1;
 const DEFAULT_VEL_X = 5;
 const DEFAULT_JUMP_VEL = -10;
 
-class Entity {
-
-  constructor (x, y, width, height){
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.velX = 0;
-    this.velY = 0;
-  }
-}
-
-class Physics {
+export default class Physics {
 
   static checkCollision(eA, eB){
     return !((eA.x >= eB.x + eB.width)
