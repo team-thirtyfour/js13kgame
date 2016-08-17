@@ -1,65 +1,21 @@
+//LEFT=37, UP=38,RIGHT=39
+let keys = [false, false, false];
 
-export const KeyboardCsts = {
-  UP_KEYCODE: 38,
-  LEFT_KEYCODE: 37,
-  RIGHT_KEYCODE: 39
+function keyHandler(val) {
+    return (e) => {
+        let i = e.keyCode - 37;
+        //key[37] can have a false value, so testing against undefined is needed
+        if (keys[i] !== undefined) {
+            keys[i] = val;
+        }
+    };
 }
 
-let upPressed = false;
-let leftPressed = false;
-let rightPressed = false;
-
-export class Keyboard {
-
-  static _keyDownHandler(e){
-    switch(e.keyCode){
-      case KeyboardCsts.UP_KEYCODE:
-        upPressed = true;
-        break;
-      case KeyboardCsts.LEFT_KEYCODE:
-        leftPressed = true;
-        break;
-      case KeyboardCsts.RIGHT_KEYCODE:
-        rightPressed = true;
-        break;
-      default:
-        break;
-    }
-  }
-
-  static _keyUpHandler(e){
-    switch(e.keyCode){
-      case KeyboardCsts.UP_KEYCODE:
-        upPressed = false;
-        break;
-      case KeyboardCsts.LEFT_KEYCODE:
-        leftPressed = false;
-        break;
-      case KeyboardCsts.RIGHT_KEYCODE:
-        rightPressed = false;
-        break;
-      default:
-        break;
-    }
-  }
-
-  static isKeyPressed(keyCode){
-    switch(keyCode){
-      case KeyboardCsts.UP_KEYCODE:
-        return upPressed;
-        break;
-      case KeyboardCsts.LEFT_KEYCODE:
-        return leftPressed;
-        break;
-      case KeyboardCsts.RIGHT_KEYCODE:
-        return rightPressed;
-        break;
-      default:
-        break;
-    }
-  }
-
+export default {
+    isLeft: () => keys[0],
+    isUp: () => keys[1],
+    isRight: () => keys[2]
 }
 
-window.addEventListener('keydown', Keyboard._keyDownHandler, false);
-window.addEventListener('keyup', Keyboard._keyUpHandler, false);
+window.addEventListener('keyup', keyHandler(false), false);
+window.addEventListener('keydown', keyHandler(true), false);

@@ -8,6 +8,7 @@
     "dev": "watch 'npm run test && npm run devjs' ./src",
     "devjs": "rollup -c -o dist/bundle.js && babel dist/bundle.js | indexhtmlify --title js13kgame --style src/main.css > dist/index.html",
     "build": "rollup -c -o dist/bundle.js && babel dist/bundle.js | uglifyjs -cm | indexhtmlify --title js13kgame --style src/main.css | html-minifier --minify-css > dist/index.html",
+    "babel": "rollup -c -o dist/bundle.js && babel dist/bundle.js > dist/babeled.js",
     "release": "gzip -9 -c dist/index.html > dist/game.gz",
     "deploy": "npm run build && npm run release && gh-pages -d ./dist"
   },
