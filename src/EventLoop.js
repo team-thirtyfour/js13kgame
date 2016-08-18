@@ -1,4 +1,4 @@
-import {Keyboard, KeyboardCsts} from './Keyboard';
+import Keyboard from './Keyboard';
 import Physics from './Physics';
 import Entity from './Entity';
 
@@ -25,13 +25,13 @@ export default class EventLoop {
 
     static loop() {
 
-      if(Keyboard.isKeyPressed(KeyboardCsts.LEFT_KEYCODE)){
+      if(Keyboard.isLeft()){
         Physics.moveLeft(player);
-      }else if(Keyboard.isKeyPressed(KeyboardCsts.RIGHT_KEYCODE)){
+      }else if(Keyboard.isRight()){
         Physics.moveRight(player);
       }
 
-      if(Keyboard.isKeyPressed(KeyboardCsts.UP_KEYCODE) && player.onGround){
+      if(Keyboard.isUp() && player.onGround){
         Physics.jump(player);
       }
 
