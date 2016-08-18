@@ -1,15 +1,21 @@
-import EventLoop from './EventLoop';
 import LevelDeserializer from './LevelDeserializer';
 import Console from './Console';
 import KeyboardController from './KeyboardController';
 import MainLoop from './MainLoop';
 
-console.log('ok watch 22');
-EventLoop.start();
+var canvasStatic = document.createElement('canvas');
+canvasStatic.width = '600';
+canvasStatic.height = '800';
+document.getElementsByTagName('body')[0].appendChild(canvasStatic);
+
+var canvasMovable = document.createElement('canvas');
+canvasMovable.width = '600';
+canvasMovable.height = '800';
+document.getElementsByTagName('body')[0].appendChild(canvasMovable);
 
 const levelIndex = 0;
 
 const level = LevelDeserializer(levelIndex);
 Console(level);
 KeyboardController(level);
-MainLoop(level);
+MainLoop(level, canvasMovable, canvasStatic);

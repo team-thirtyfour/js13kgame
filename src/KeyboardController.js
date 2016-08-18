@@ -1,10 +1,15 @@
 import Keyboard from './Keyboard';
 
-// Modifier Keyboard pour que appuyer sur une touche
-// modifie directement le Vx et le Vy des entités Controllable
-// (faire un getter de toutes les entités Controllable depuis le Level)
-// Le plus souvent, les entités Controllable se résumeront au joueur
+const X = 20;
+const JUMP = -10;
 
 export default (level) => {
+
+    Keyboard.onLeft(() => {
+        console.log('left');
+        level.controllableEntities.forEach((e) => e.velX = -X)
+    });
+    Keyboard.onRight(() => level.controllableEntities.forEach((e) => e.velX = X));
+    Keyboard.onUp(() => level.controllableEntities.forEach((e) => e.velY += JUMP));
 
 }
