@@ -16,7 +16,12 @@ export default {
                 if(eA !== eB && checkCollision(eA, eB)) {
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
+                    //Bounce not effective
                     eA.y = eB.y - eA.height;
+                    if(eA.velY < 0.02) {
+                      eA.velY = 0;
+                    }
+                    console.log(eA.velY);
                     if(eB.collisionFactorY < 0){
                       //This means that we can jump or bounce on the surface
                       eA.canJump = true;

@@ -14,7 +14,7 @@ const keyHandler = (val) => {
 window.addEventListener('keydown', keyHandler(true), false);
 window.addEventListener('keyup', keyHandler(false), false);
 
-const X = 20;
+const X = 1;
 const JUMP = -10;
 
 export default (level) => {
