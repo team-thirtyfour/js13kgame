@@ -41,8 +41,8 @@ var LevelDeserializer = (levelIndex) => {
 const parse = (levelStr) => {
     //TODO
     const player = new Entity(100, 10, 10, 10, 0, 0, 0, 0, 'circle', 'red', true, true);
-    const ground = new Entity(0, 185, 500, 10, 0, 0, 0, 2, 'square', 'blue', false, false);
-    return new Level([player, ground], 1);
+    const ground = new Entity(0, 185, 500, 10, 0, 0, 0, -0.2, 'square', 'blue', false, false);
+    return new Level([player, ground], 0.1);
 };
 
 //LEFT=37, UP=38, RIGHT=39
@@ -135,11 +135,8 @@ var Collision = {
         level.entities.forEach((eA) => {
             level.entities.forEach((eB) => {
                 if(eA !== eB && checkCollision(eA, eB)) {
-                    //TODO not working
-                    eA.velX = eA.velX + (eA.velX * eB.collisionFactorX);
-                    eA.velY = eA.velY + (eA.velY * eB.collisionFactorY);
-                    eB.velX = eB.velX + (eB.velX * eA.collisionFactorX);
-                    eB.velY = eB.velY + (eB.velY * eA.collisionFactorY);
+                    eA.velX *= eB.collisionFactorX;
+                    eA.velY *= eB.collisionFactorY;
                 }
             });
         });
