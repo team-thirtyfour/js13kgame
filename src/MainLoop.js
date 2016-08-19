@@ -23,6 +23,7 @@ export default (level, canvasMovable, canvasStatic) => {
     setTimeout(loop, 1 / FRAMERATE * 1000);
   };
 
+  Renderer.init(level, canvasMovable, canvasStatic);
   loop();
 
 }
