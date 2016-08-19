@@ -13,11 +13,8 @@ export default {
         level.entities.forEach((eA) => {
             level.entities.forEach((eB) => {
                 if(eA !== eB && checkCollision(eA, eB)) {
-                    //TODO not working
-                    eA.velX = eA.velX + (eA.velX * eB.collisionFactorX);
-                    eA.velY = eA.velY + (eA.velY * eB.collisionFactorY);
-                    eB.velX = eB.velX + (eB.velX * eA.collisionFactorX);
-                    eB.velY = eB.velY + (eB.velY * eA.collisionFactorY);
+                    eA.velX *= eB.collisionFactorX;
+                    eA.velY *= eB.collisionFactorY;
                 }
             });
         });
