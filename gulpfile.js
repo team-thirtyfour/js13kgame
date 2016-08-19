@@ -4,7 +4,7 @@ var gulp = require('gulp'),
     del = require('del'),
     rollup = require('gulp-rollup'),
     sourcemaps = require('gulp-sourcemaps'),
-    babel= require('gulp-babel'),
+    babel = require('gulp-babel'),
     jshint = require('gulp-jshint'),
     stylishReporter = require('jshint-stylish'),
     uglify = require('gulp-uglify'),
@@ -12,51 +12,66 @@ var gulp = require('gulp'),
     util = require('gulp-util'),
     htmlmin = require('gulp-htmlmin'),
     inject = require('gulp-inject'),
-    runSequence = require('run-sequence').use(gulp),
-    cleanCSS = require('gulp-clean-css');
+    cleanCSS = require('gulp-clean-css'),
+    gulpSequence = require('gulp-sequence');
 
-var SOURCE_DIR="./src",
-    DIST_DIR="./dist",
-    JS_FILES=SOURCE_DIR + "/**/*.js",
-    BUNDLE_NAME='bundle.js',
+var SOURCE_DIR = './src',
+    DIST_DIR = './dist',
+    JS_SRC_PATH = SOURCE_DIR + "/**/*.js",
+    BUNDLE_NAME = 'bundle.js',
     CSS_SRC_PATH = SOURCE_DIR + '/**/*.css',
-    CSS_DIST_PATH = DIST_DIR + '/**/*.css';
+    CSS_DIST_PATH = DIST_DIR + '/**/*.css',
+    INDEX_FILE_PATH = SOURCE_DIR + '/index.html';
 
-gulp.task('clean', function() {
+var productionFlag = process.argv.indexOf("--production") > -1 ? true : false;
+var sourceMapsFlag = process.argv.indexOf("--sourcemaps") > -1 ? true : false;
+
+gulp.task('clean', function () {
     // You can use multiple globbing patterns as you would with `gulp.src`
     del([DIST_DIR]);
 });
 
-gulp.task('bundlejs', function() {
-    gulp.src(JS_FILES)
+gulp.task('bundlejs', function () {
+
+    var stream = gulp.src(JS_SRC_PATH)
         .pipe(jshint())
         .pipe(jshint.reporter(stylishReporter))
-        .pipe(sourcemaps.init())
         .pipe(rollup({
             entry: 'src/main.js',
             format: 'iife',
-            plugins: []}))
+            plugins: []
+        }))
         .pipe(rename(BUNDLE_NAME))
-        .pipe(babel())
-        .on('error', util.log)
-        .pipe(uglify({mangle: true, compress: true}))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(DIST_DIR));
+        .pipe(babel());
+
+    if (sourceMapsFlag) {
+        stream.pipe(sourcemaps.init({debug: true}));
+    }
+    if (productionFlag) {
+        stream.pipe(uglify({mangle: true, compress: true}))
+    }
+    if (sourceMapsFlag) {
+        stream.pipe(sourcemaps.write());
+    }
+
+    return stream.pipe(gulp.dest(DIST_DIR));
 });
 
-gulp.task('minifyCss', function(){
-    gulp.src(CSS_SRC_PATH)
-        .pipe(cleanCSS())
-        .pipe(gulp.dest(DIST_DIR));
+gulp.task('minify-css', function () {
+    var stream = gulp.src(CSS_SRC_PATH);
+    if (productionFlag) {
+        stream.pipe(cleanCSS());
+    }
+
+    stream.pipe(gulp.dest(DIST_DIR));
 });
 
 
-gulp.task('buildMinifiedIndexHtml', function(){
-    var target = gulp.src(SOURCE_DIR + '/index.html');
+gulp.task('minify-html', function () {
     //get css sources and minify them
     var cssSource = gulp.src(CSS_DIST_PATH);
     var jsSource = gulp.src(DIST_DIR + '/' + BUNDLE_NAME);
-    return gulp.src(SOURCE_DIR + '/index.html')
+    return gulp.src(INDEX_FILE_PATH)
         .pipe(inject(cssSource, {
             starttag: '<!-- inject:head:{{ext}} -->',
             transform: function (filePath, file) {
@@ -73,22 +88,37 @@ gulp.task('buildMinifiedIndexHtml', function(){
         }))
         .pipe(htmlmin({
             collapseWhitespace: true,
-            removeComments: true}))
+            removeComments: true
+        }))
         .pipe(gulp.dest(DIST_DIR));
 });
 
-gulp.task('build', function(callback) {
-    //runs clean before running bundlejs and minifyjs in parallel
-    runSequence('clean',
-        ['bundlejs', 'minifyCss'],
-        ['buildMinifiedIndexHtml'],
-        callback);
+gulp.task('copy-html', function () {
+    gulp.src(SOURCE_DIR + '/index.html')
+        .pipe(htmlmin({
+            removeComments: true,
+            collapseWhitespace: true,
+            preserveLineBreaks: true
+        }))
+        .pipe(gulp.dest(DIST_DIR));
 });
 
+gulp.task('build', function (callback) {
+    if (productionFlag) {
+        gulpSequence('clean', ['bundlejs', 'minify-css'], 'minify-html', callback);
+    } else {
+        gulpSequence('clean', ['bundlejs', 'minify-css', 'copy-html'], callback);
+    }
+});
+
+gulp.task('watch', ['bundlejs'], function () {
+    gulp.watch(JS_SRC_PATH, ['bundlejs']);
+    gulp.watch(CSS_SRC_PATH, ['minify-css']);
+    gulp.watch(INDEX_FILE_PATH, ['copy-html']);
+});
 
 //TODO zip and zip check
-//TODO try multiple minifiers to find the best
-//TODO watch
+//TODO try multiple minifiers to find the best one
 //TODO tests
 
 //Default Task
