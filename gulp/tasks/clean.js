@@ -2,9 +2,10 @@
 
 var gulp = require('gulp'),
     conf = require('../config'),
-    del = require('del');
+    //del doesn't work well with rollup so gulp-clean was used
+    clean = require('gulp-clean');
 
 gulp.task('clean', function () {
-    // You can use multiple globbing patterns as you would with `gulp.src`
-    del([conf.DIST_DIR]);
+    return gulp.src(conf.DIST_DIR, {read: false})
+        .pipe(clean());
 });

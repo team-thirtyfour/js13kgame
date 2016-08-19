@@ -4,8 +4,8 @@ var gulp = require('gulp'),
 
 gulp.task('build', function (callback) {
     if (conf.PRODUCTION_FLAG) {
-        gulpSequence('clean', ['bundlejs', 'minify-css'], ['minify-html'], callback);
+        return gulpSequence(['clean', 'jshint'], ['bundlejs', 'minify-css'], ['minify-html'], callback);
     } else {
-        gulpSequence('clean', 'bundlejs', ['minify-css', 'copy-html'], callback);
+        return gulpSequence(['clean', 'jshint'], 'bundlejs', ['minify-css', 'copy-html'], callback);
     }
 });

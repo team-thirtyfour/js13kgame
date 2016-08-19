@@ -25,5 +25,6 @@ module.exports = {
     INDEX_SRC_PATH: INDEX_FILE_PATH,
     BUILT_INDEX_FILE_PATH: BUILT_INDEX_FILE_PATH,
     PRODUCTION_FLAG: productionFlag,
-    SOURCEMAP_FLAG: sourceMapsFlag
+    SOURCEMAP_FLAG: sourceMapsFlag,
+    ROLLUP_FILENAME: 'rolledup.js'
 };

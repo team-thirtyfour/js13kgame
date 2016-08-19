@@ -14,5 +14,5 @@ gulp.task('gzip', function () {
             title: "### GZIPPED GAME FILE SIZE ###",
             showFiles: true
         }))
-        .pipe(gulp.dest(conf.DIST_DIR + '/compressed'));
+        .pipe(gulp.dest(conf.DIST_DIR));
 });
