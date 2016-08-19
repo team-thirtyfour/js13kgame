@@ -13,7 +13,9 @@ var gulp = require('gulp'),
     htmlmin = require('gulp-htmlmin'),
     inject = require('gulp-inject'),
     cleanCSS = require('gulp-clean-css'),
-    gulpSequence = require('gulp-sequence');
+    gulpSequence = require('gulp-sequence'),
+    jasmine = require('gulp-jasmine'),
+    jasmineReporters = require('jasmine-reporters');
 
 var SOURCE_DIR = './src',
     DIST_DIR = './dist',
@@ -21,6 +23,7 @@ var SOURCE_DIR = './src',
     BUNDLE_NAME = 'bundle.js',
     CSS_SRC_PATH = SOURCE_DIR + '/**/*.css',
     CSS_DIST_PATH = DIST_DIR + '/**/*.css',
+    TESTS_SOURCE_PATH = SOURCE_DIR + '/**/*Spec.js',
     INDEX_FILE_PATH = SOURCE_DIR + '/index.html';
 
 var productionFlag = process.argv.indexOf("--production") > -1 ? true : false;
@@ -103,6 +106,13 @@ gulp.task('copy-html', function () {
         .pipe(gulp.dest(DIST_DIR));
 });
 
+gulp.task('tests', function(){
+    gulp.src(TESTS_SOURCE_PATH)
+        .pipe(jasmine({
+            reporter: new jasmineReporters.TerminalReporter()
+        }));
+});
+
 gulp.task('build', function (callback) {
     if (productionFlag) {
         gulpSequence('clean', ['bundlejs', 'minify-css'], 'minify-html', callback);
@@ -111,10 +121,11 @@ gulp.task('build', function (callback) {
     }
 });
 
-gulp.task('watch', ['bundlejs'], function () {
-    gulp.watch(JS_SRC_PATH, ['bundlejs']);
+gulp.task('watch', [ 'tests', 'bundlejs'], function () {
+    gulp.watch(JS_SRC_PATH, ['bundlejs', 'tests']);
     gulp.watch(CSS_SRC_PATH, ['minify-css']);
     gulp.watch(INDEX_FILE_PATH, ['copy-html']);
+    gulp.watch(TESTS_SOURCE_PATH, ['tests']);
 });
 
 //TODO zip and zip check
