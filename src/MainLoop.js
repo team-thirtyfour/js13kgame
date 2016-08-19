@@ -4,13 +4,13 @@ import Collision from './Collision';
 
 const FRAMERATE = 60;
 
-export default (level) => {
+export default (level, canvasMovable, canvasStatic) => {
 
   const loop = () => {
 
     // On est pas sur de cet ordre
     Physics.update(level);
-    Renderer.render(level);
+    Renderer.render(level, canvasMovable, canvasStatic);
     Collision.check(level);
 
     //Check la fin du niveau (mort ou a atteint la porte)
@@ -18,7 +18,7 @@ export default (level) => {
     //directement dans Collision
 
     setTimeout(loop, 1 / FRAMERATE * 1000);
-  }
+  };
 
   loop();  
 }

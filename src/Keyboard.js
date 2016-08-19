@@ -1,21 +1,21 @@
-//LEFT=37, UP=38,RIGHT=39
-let keys = [false, false, false];
+//LEFT=37, UP=38, RIGHT=39
+let keys = [[], [], []];
 
-function keyHandler(val) {
+const keyHandler = () => {
     return (e) => {
         let i = e.keyCode - 37;
         //key[37] can have a false value, so testing against undefined is needed
         if (keys[i] !== undefined) {
-            keys[i] = val;
+            keys[i].forEach((cb) => cb());
         }
     };
-}
+};
 
 export default {
-    isLeft: () => keys[0],
-    isUp: () => keys[1],
-    isRight: () => keys[2]
+    onLeft: (cb) => keys[0].push(cb),
+    onUp: (cb) => keys[1].push(cb),
+    onRight: (cb) => keys[2].push(cb)
 }
 
-window.addEventListener('keyup', keyHandler(false), false);
-window.addEventListener('keydown', keyHandler(true), false);
+window.addEventListener('keyup', keyHandler(), false);
+window.addEventListener('keydown', keyHandler(), false);

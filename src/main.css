@@ -3,10 +3,9 @@ html, body {
     height: 100%;
 }
 
-#canvas{
-  width: 600px;
-  height: 800px;
-  display: block;
-  border: 1px solid #000;
-  margin: 50px auto;
+canvas {
+    border: 1px solid #000;
+    position: absolute;
+    top: 10%;
+    left: 10%;
 }
