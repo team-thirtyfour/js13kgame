@@ -12,6 +12,7 @@
     "gulp-prod-debug": "gulp --production --sourcemaps",
     "gulp-dev": "gulp",
     "gulp-watch": "gulp watch",
+    "gulp-release": "gulp release",
     "release": "gzip -9 -c dist/index.html > dist/game.gz",
     "deploy": "npm run build && npm run release && gh-pages -d ./dist -m \"Size: $(find ./dist -maxdepth 1 -printf '%s\t%f\n' | grep game.gz | grep -Po '[0-9]+')\""
   },
@@ -33,6 +34,7 @@
     "gulp": "3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-clean-css": "^2.0.12",
+    "gulp-gzip": "^1.4.0",
     "gulp-htmlmin": "^2.0.0",
     "gulp-inject": "^4.1.0",
     "gulp-jasmine": "^2.4.0",
@@ -40,6 +42,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-rollup": "2.3.0",
     "gulp-sequence": "^0.4.5",
+    "gulp-size": "^2.1.0",
     "gulp-sourcemaps": "1.6.0",
     "gulp-uglify": "2.0.0",
     "gulp-util": "^3.0.7",

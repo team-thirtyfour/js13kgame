@@ -15,7 +15,9 @@ var gulp = require('gulp'),
     cleanCSS = require('gulp-clean-css'),
     gulpSequence = require('gulp-sequence'),
     jasmine = require('gulp-jasmine'),
-    jasmineReporters = require('jasmine-reporters');
+    jasmineReporters = require('jasmine-reporters'),
+    filesize = require('gulp-size'),
+    gzip = require('gulp-gzip');
 
 var SOURCE_DIR = './src',
     DIST_DIR = './dist',
@@ -24,7 +26,8 @@ var SOURCE_DIR = './src',
     CSS_SRC_PATH = SOURCE_DIR + '/**/*.css',
     CSS_DIST_PATH = DIST_DIR + '/**/*.css',
     TESTS_SOURCE_PATH = SOURCE_DIR + '/**/*Spec.js',
-    INDEX_FILE_PATH = SOURCE_DIR + '/index.html';
+    INDEX_FILE_PATH = SOURCE_DIR + '/index.html',
+    BUILT_INDEX_FILE_PATH= DIST_DIR + '/index.html';
 
 var productionFlag = process.argv.indexOf("--production") > -1 ? true : false;
 var sourceMapsFlag = process.argv.indexOf("--sourcemaps") > -1 ? true : false;
@@ -93,6 +96,11 @@ gulp.task('minify-html', function () {
             collapseWhitespace: true,
             removeComments: true
         }))
+        .pipe(filesize({
+            title: "### FILE SIZE WHEN GZIPPED ###",
+            showFiles: true,
+            gzip: true
+        }))
         .pipe(gulp.dest(DIST_DIR));
 });
 
@@ -121,12 +129,30 @@ gulp.task('build', function (callback) {
     }
 });
 
+gulp.task('gzip', function(){
+    gulp.src(BUILT_INDEX_FILE_PATH)
+        .pipe(gzip({
+            gzipOptions: {level: 9}
+        }))
+        .pipe(filesize({
+            title: "### GZIPPED GAME FILE SIZE ###",
+            showFiles: true
+        }))
+        .pipe(gulp.dest(DIST_DIR + '/compressed'));
+});
+
+gulp.task('release', function(callback){
+    productionFlag = true;
+    gulpSequence('clean', ['bundlejs', 'minify-css'], 'minify-html', 'gzip', callback);
+});
+
 gulp.task('watch', [ 'tests', 'bundlejs'], function () {
     gulp.watch(JS_SRC_PATH, ['bundlejs', 'tests']);
     gulp.watch(CSS_SRC_PATH, ['minify-css']);
     gulp.watch(INDEX_FILE_PATH, ['copy-html']);
     gulp.watch(TESTS_SOURCE_PATH, ['tests']);
 });
+
 
 //TODO zip and zip check
 //TODO try multiple minifiers to find the best one
