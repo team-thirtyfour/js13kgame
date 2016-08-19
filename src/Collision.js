@@ -11,10 +11,16 @@ export default {
         //TODO naive implementation == change me
         let collision = false;
         level.entities.forEach((eA) => {
+            eA.canJump = false;
             level.entities.forEach((eB) => {
                 if(eA !== eB && checkCollision(eA, eB)) {
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
+                    eA.y = eB.y - eA.height;
+                    if(eB.collisionFactorY < 0){
+                      //This means that we can jump or bounce on the surface
+                      eA.canJump = true;
+                    }
                 }
             });
         });

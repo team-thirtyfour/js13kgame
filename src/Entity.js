@@ -13,6 +13,8 @@ export default class Entity {
         this.color = color;
         this.isMovable = isMovable;
         this.isControllable = isControllable;
+
+        this.canJump = false;
     }
 
 }

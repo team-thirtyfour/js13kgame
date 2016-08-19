@@ -24,7 +24,7 @@ export default (level) => {
       e.velX = -X;
     }else if(keys[2]){
       e.velX = X;
-    }else if(keys[1]){
+    }else if(keys[1] && e.canJump){
       e.velY += JUMP;
     }
   });
