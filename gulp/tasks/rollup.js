@@ -1,15 +1,12 @@
 "use strict";
 
 var gulp = require('gulp'),
-    conf = require('../config'),
+    conf = require('../../gulp-config'),
     rollup = require('rollup-stream'),
     source = require('vinyl-source-stream');
 
 gulp.task('rollup', function () {
-    return rollup({
-        entry: './src/main.js',
-        format: 'iife',
-        plugins: []
-    }).pipe(source(conf.ROLLEDUP_FILENAME))
-        .pipe(gulp.dest(conf.DIST_DIR));
+    return rollup(conf.rollup)
+        .pipe(source(conf.dist.js.rolledup_filename))
+        .pipe(gulp.dest(conf.dist.dir));
 });

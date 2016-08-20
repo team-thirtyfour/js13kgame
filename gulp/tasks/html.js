@@ -1,7 +1,7 @@
 "use strict";
 
 var gulp = require('gulp'),
-    conf = require('../config'),
+    conf = require('../../gulp-config'),
     htmlmin = require('gulp-htmlmin'),
     inject = require('gulp-inject'),
     filesize = require('gulp-size');
@@ -9,9 +9,9 @@ var gulp = require('gulp'),
 
 gulp.task('minify-html', function () {
     //get css sources and minify them
-    var cssSource = gulp.src(conf.CSS_DIST_PATH);
-    var jsSource = gulp.src(conf.BUNDLE_PATH);
-    return gulp.src(conf.INDEX_SRC_PATH)
+    var cssSource = gulp.src(conf.dist.path.css);
+    var jsSource = gulp.src(conf.dist.path.js.bundle);
+    return gulp.src(conf.source.path.indexhtml)
         .pipe(inject(cssSource, {
             starttag: '<!-- inject:head:{{ext}} -->',
             transform: function (filePath, file) {
@@ -31,20 +31,20 @@ gulp.task('minify-html', function () {
             removeComments: true
         }))
         .pipe(filesize({
-            title: "### FILE SIZE WHEN GZIPPED ###",
+            title: "### FILE SIZE WHEN GZIPPED SHOULD BE ###",
             showFiles: true,
             gzip: true
         }))
-        .pipe(gulp.dest(conf.DIST_DIR));
+        .pipe(gulp.dest(conf.dist.dir));
 });
 
 
 gulp.task('copy-html', function () {
-    gulp.src(conf.INDEX_SRC_PATH)
+    gulp.src(conf.source.path.indexhtml)
         .pipe(htmlmin({
             removeComments: true,
             collapseWhitespace: true,
             preserveLineBreaks: true
         }))
-        .pipe(gulp.dest(conf.DIST_DIR));
+        .pipe(gulp.dest(conf.dist.dir));
 });

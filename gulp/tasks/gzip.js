@@ -1,21 +1,18 @@
 "use strict";
 
 var gulp = require('gulp'),
-    conf = require('../config'),
+    conf = require('../../gulp-config'),
     filesize = require('gulp-size'),
     gzip = require('gulp-gzip'),
     rename = require('gulp-rename');
 
 gulp.task('gzip', function () {
-    gulp.src(conf.BUILT_INDEX_FILE_PATH)
-        .pipe(gzip({
-            gzipOptions: {level: 9},
-            append: true
-        }))
+    gulp.src(conf.dist.path.indexhtml)
+        .pipe(gzip(conf.gzip.options))
+        .pipe(rename(conf.gzip.filename))
         .pipe(filesize({
             title: "### GZIPPED GAME FILE SIZE ###",
             showFiles: true
         }))
-        .pipe(rename(conf.GZIP_FILENAME))
-        .pipe(gulp.dest(conf.DIST_DIR));
+        .pipe(gulp.dest(conf.dist.dir));
 });

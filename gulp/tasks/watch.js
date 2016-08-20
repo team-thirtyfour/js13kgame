@@ -1,10 +1,16 @@
 "use strict";
 var gulp = require('gulp'),
-    conf = require('../config');
+    conf = require('../../gulp-config'),
+    gulpSequence = require('gulp-sequence');
 
-gulp.task('watch', ['bundlejs', 'jshint'], function () {
-    gulp.watch(conf.JS_SRC_PATH, ['bundlejs']);
-    gulp.watch(conf.CSS_SRC_PATH, ['minify-css']);
-    gulp.watch(conf.INDEX_SRC_PATH, ['copy-html']);
+
+gulp.task('watching', function () {
+    gulp.watch(conf.source.path.js, ['bundlejs']);
+    gulp.watch(conf.source.path.css, ['css']);
+    gulp.watch(conf.source.path.indexhtml, ['copy-html']);
     // gulp.watch(TESTS_SOURCE_PATH, ['tests']);
+});
+
+gulp.task('watch', function (callback) {
+    return gulpSequence(['clean', 'jshint'], ['bundlejs','copy-html', 'css'], 'watching', callback);
 });

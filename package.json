@@ -10,10 +10,10 @@
     "build": "rollup -c -o dist/bundle.js && babel dist/bundle.js | uglifyjs -cm | indexhtmlify --title js13kgame --style src/main.css | html-minifier --minify-css > dist/index.html",
     "gulp-build": "gulp build --uglify",
     "gulp-build-debug": "gulp --uglify --sourcemaps",
-    "gulp-dev": "gulp watch",
-    "gulp-release": "gulp release --uglify",
     "gulp-google": "gulp build --googlecompiler",
     "gulp-google-debug": "gulp build --googlecompiler --sourcemaps",
+    "gulp-dev": "gulp watch",
+    "gulp-release": "gulp release --uglify",
     "release": "gzip -9 -c dist/index.html > dist/game.gz",
     "deploy": "npm run build && npm run release && gh-pages -d ./dist -m \"Size: $(find ./dist -maxdepth 1 -printf '%s\t%f\n' | grep game.gz | grep -Po '[0-9]+')\""
   },

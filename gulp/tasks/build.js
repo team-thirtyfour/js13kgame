@@ -1,14 +1,13 @@
 var gulp = require('gulp'),
-    conf = require('../config'),
+    conf = require('../../gulp-config'),
     gulpSequence = require('gulp-sequence');
 
 gulp.task('build', function (callback) {
-    if (conf.UGLIFY_FLAG) {
-        return gulpSequence(['clean', 'jshint'], ['bundlejs', 'minify-css'], ['minify-html'], callback);
-    } else if (conf.GOOGLE_COMPILER_FLAG) {
-        return gulpSequence(['clean', 'jshint'], ['googlebundle', 'minify-css'], ['minify-html'], callback);
-    }
-    else {
-        return gulpSequence(['clean', 'jshint'], 'bundlejs', ['minify-css', 'copy-html'], callback);
+    if (conf.flags.uglify) {
+        return gulpSequence(['clean', 'jshint'], ['bundlejs', 'css'], ['minify-html'], callback);
+    } else if (conf.flags.googlecompile) {
+        return gulpSequence(['clean', 'jshint'], ['googlebundle', 'css'], ['minify-html'], callback);
+    } else {
+        return gulpSequence(['clean', 'jshint'], 'bundlejs', ['css', 'copy-html'], callback);
     }
 });
