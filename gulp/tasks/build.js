@@ -3,9 +3,12 @@ var gulp = require('gulp'),
     gulpSequence = require('gulp-sequence');
 
 gulp.task('build', function (callback) {
-    if (conf.PRODUCTION_FLAG) {
+    if (conf.UGLIFY_FLAG) {
         return gulpSequence(['clean', 'jshint'], ['bundlejs', 'minify-css'], ['minify-html'], callback);
-    } else {
+    } else if (conf.GOOGLE_COMPILER_FLAG) {
+        return gulpSequence(['clean', 'jshint'], ['googlebundle', 'minify-css'], ['minify-html'], callback);
+    }
+    else {
         return gulpSequence(['clean', 'jshint'], 'bundlejs', ['minify-css', 'copy-html'], callback);
     }
 });

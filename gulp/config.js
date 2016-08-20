@@ -8,10 +8,12 @@ var SOURCE_DIR = './src',
     CSS_DIST_PATH = DIST_DIR + '/**/*.css',
     TESTS_SOURCE_PATH = SOURCE_DIR + '/**/*Spec.js',
     INDEX_FILE_PATH = SOURCE_DIR + '/index.html',
-    BUILT_INDEX_FILE_PATH = DIST_DIR + '/index.html';
+    BUILT_INDEX_FILE_PATH = DIST_DIR + '/index.html',
+    ROLLEDUP_FILENAME = 'rolledup.js';
 
-var productionFlag = process.argv.indexOf("--production") > -1 ? true : false;
+var uglifyFlag = process.argv.indexOf("--uglify") > -1 ? true : false;
 var sourceMapsFlag = process.argv.indexOf("--sourcemaps") > -1 ? true : false;
+var googleCompilerFlag = process.argv.indexOf("--googlecompiler") > -1 ? true : false;
 
 module.exports = {
     SOURCE_DIR: SOURCE_DIR,
@@ -24,7 +26,10 @@ module.exports = {
     TESTS_SOURCE_PATH: TESTS_SOURCE_PATH,
     INDEX_SRC_PATH: INDEX_FILE_PATH,
     BUILT_INDEX_FILE_PATH: BUILT_INDEX_FILE_PATH,
-    PRODUCTION_FLAG: productionFlag,
+    UGLIFY_FLAG: uglifyFlag,
     SOURCEMAP_FLAG: sourceMapsFlag,
-    ROLLUP_FILENAME: 'rolledup.js'
+    ROLLEDUP_FILENAME: ROLLEDUP_FILENAME,
+    ROLLEDUP_FILE_PATH: DIST_DIR + '/' + ROLLEDUP_FILENAME,
+    GOOGLE_COMPILER_FLAG: googleCompilerFlag,
+    GZIP_FILENAME: 'game'
 };

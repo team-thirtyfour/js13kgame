@@ -7,6 +7,9 @@ var gulp = require('gulp'),
 
 gulp.task('release', function (callback) {
     //force production flag to true
-    conf.PRODUCTION_FLAG = true;
-    gulpSequence('clean', ['bundlejs', 'minify-css'], 'minify-html', 'gzip', callback);
+    if(conf.UGLIFY_FLAG){
+        gulpSequence('clean', ['bundlejs', 'minify-css'], 'minify-html', 'gzip', callback);
+    } else if(conf.GOOGLE_COMPILER_FLAG) {
+        gulpSequence('clean', ['googlebundle', 'minify-css'], 'minify-html', 'gzip', callback);
+    }
 });

@@ -7,7 +7,7 @@ var gulp = require('gulp'),
 
 gulp.task('minify-css', function () {
     var stream = gulp.src(conf.CSS_SRC_PATH);
-    if (conf.PRODUCTION_FLAG) {
+    if (conf.UGLIFY_FLAG) {
         stream.pipe(cleanCSS());
     }
     return stream.pipe(gulp.dest(conf.DIST_DIR));

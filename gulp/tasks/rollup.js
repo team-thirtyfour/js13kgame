@@ -10,6 +10,6 @@ gulp.task('rollup', function () {
         entry: './src/main.js',
         format: 'iife',
         plugins: []
-    }).pipe(source(conf.ROLLUP_FILENAME))
+    }).pipe(source(conf.ROLLEDUP_FILENAME))
         .pipe(gulp.dest(conf.DIST_DIR));
 });
