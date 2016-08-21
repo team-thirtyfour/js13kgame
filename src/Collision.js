@@ -21,7 +21,6 @@ export default {
                     if(eA.velY < 0.02) {
                       eA.velY = 0;
                     }
-                    console.log(eA.velY);
                     if(eB.collisionFactorY < 0){
                       //This means that we can jump or bounce on the surface
                       eA.canJump = true;
