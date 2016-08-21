@@ -1,11 +1,19 @@
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
     const relative = compute(canvas, entity);
-    ctx.beginPath();
-    ctx.rect(relative.x, relative.y, relative.width, relative.height);
     ctx.fillStyle = entity.color;
-    ctx.fill();
+    ctx.beginPath();
+    if(entity.forme === 'rect') {
+        ctx.rect(relative.x, relative.y, relative.width, relative.height);
+    } else if(entity.forme === 'circle') {
+        ctx.arc(relative.x+relative.width/2, relative.y+relative.height/2, relative.width/2, 0, 2*Math.PI);
+    } else if(entity.forme === 'triangle') {
+        ctx.moveTo(relative.x+relative.width/2, relative.y);
+        ctx.lineTo(relative.x+relative.width, relative.y+relative.height);
+        ctx.lineTo(relative.x, relative.y+relative.height)
+    }
     ctx.closePath();
+    ctx.fill();
 };
 
 const compute = (canvas, entity) => {
