@@ -17,7 +17,7 @@ const parse = (level) => {
             case 'M':
                 return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, FORME_TRIANGLE, 'grey', false, false);
             case 'T':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.2, FORME_RECT, 'blue', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.5, FORME_RECT, 'blue', false, false);
         }
 
     });
