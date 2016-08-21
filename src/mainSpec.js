@@ -2,10 +2,6 @@ import LevelDeserializer from './LevelDeserializer';
 import Entity from './Entity';
 
 describe("A suite", function() {
-    it("contains spec with an expectation", function() {
-        expect(true).toBe(true);
-    });
-
     it("should dezerialize first level", function() {
 
         var result = LevelDeserializer(0);
