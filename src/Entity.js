@@ -14,7 +14,6 @@ export default (x, y, width, height, velX, velY, collisionFactorX, collisionFact
         isControllable: isControllable,
         isKiller: isKiller,
         isFinisher: isFinisher,
-
         isKilled: false,
         canJump: false
     };
