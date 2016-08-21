@@ -6,10 +6,14 @@ import Keyboard from './Keyboard';
 const FRAMERATE = 60;
 const rAF = requestAnimationFrame || function(cb) { setTimeout(cb, 1 / FRAMERATE * 1000) };
 
-export default (level) => {
+export default (level, onGameOver) => {
 
     let lastTime;
     const loop = () => {
+
+        if(Collision.checkGameOver(level)) {
+            return onGameOver();
+        }
 
         const now = Date.now();
         const deltaTime = (now - lastTime) / 1000.0;
