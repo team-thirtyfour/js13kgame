@@ -1,6 +1,7 @@
 html, body {
     display: block;
     height: 100%;
+    overflow: hidden;
 }
 
 canvas {
@@ -8,4 +9,7 @@ canvas {
     position: absolute;
     top: 10%;
     left: 10%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
