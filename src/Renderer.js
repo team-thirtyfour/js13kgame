@@ -9,37 +9,46 @@ const render = (canvas, ctx, entity) => {
 };
 
 const compute = (canvas, entity) => {
-  return {
-    x: entity.x * canvas.width / 100,
-    y: entity.y * canvas.height / 100,
-    width: entity.width * canvas.width / 100,
-    height: entity.height * canvas.height / 100,
-  }
-}
+    return {
+        x: entity.x * canvas.width / 100,
+        y: entity.y * canvas.height / 100,
+        width: entity.width * canvas.width / 100,
+        height: entity.height * canvas.height / 100
+    }
+};
+
+const draw = (canvas, entities) => {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    entities.forEach((e) => render(canvas, ctx, e));
+};
 
 export default {
 
-    init: (level, canvasMovable, canvasStatic) => {
-      const ctxMovable = canvasMovable.getContext('2d');
-      const ctxStatic = canvasStatic.getContext('2d');
-      ctxMovable.clearRect(0, 0, canvasMovable.width, canvasMovable.height);
-      ctxStatic.clearRect(0, 0, canvasMovable.width, canvasMovable.height);
-      level.entities.forEach((e) => {
-          if(e.isMovable) {
-              render(canvasMovable, ctxMovable, e);
-          } else {
-              render(canvasStatic, ctxStatic, e);
-          }
-      });
+    init: (level) => {
+        draw(canvasMovable, level.entities.filter((e) => e.isMovable));
+        draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
     },
 
-    render: (level, canvasMovable, canvasStatic) => {
-        const ctxMovable = canvasMovable.getContext('2d');
-        ctxMovable.clearRect(0, 0, canvasMovable.width, canvasMovable.height);
-        level.entities.forEach((e) => {
-            if(e.isMovable) {
-                render(canvasMovable, ctxMovable, e);
-            }
-        });
+    render: (level) => {
+        draw(canvasMovable, level.entities.filter((e) => e.isMovable));
     }
 }
+
+var canvasStatic = document.createElement('canvas');
+canvasStatic.width = window.innerWidth * 0.8;
+canvasStatic.height = window.innerHeight * 0.8;
+document.getElementsByTagName('body')[0].appendChild(canvasStatic);
+
+var canvasMovable = document.createElement('canvas');
+canvasMovable.width = window.innerWidth * 0.8;
+canvasMovable.height = window.innerHeight * 0.8;
+document.getElementsByTagName('body')[0].appendChild(canvasMovable);
+
+window.addEventListener('resize', () => {
+    canvasStatic.width = window.innerWidth * 0.8;
+    canvasStatic.height = window.innerHeight * 0.8;
+    canvasMovable.width = window.innerWidth * 0.8;
+    canvasMovable.height = window.innerHeight * 0.8;
+    Renderer.init(level, canvasMovable, canvasStatic);
+}, false);
