@@ -2,12 +2,20 @@ import LevelDeserializer from './LevelDeserializer';
 import Console from './Console';
 import MainLoop from './MainLoop';
 
-let levelIndex = 0;
+const win = () => {
+    LevelDeserializer.next();
+    start();
+};
+
+const loose = () => {
+    LevelDeserializer.previous();
+    start();
+};
 
 const start = () => {
-    const level = LevelDeserializer(levelIndex);
+    const level = LevelDeserializer.level();
     Console(level);
-    MainLoop(level, () => {levelIndex++; start();}, start);
+    MainLoop(level, win, loose);
 };
 
 start();

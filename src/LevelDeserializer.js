@@ -2,8 +2,27 @@ import Level from './Level';
 import Entity from './Entity';
 import {FORME_RECT, FORME_CIRCLE, FORME_TRIANGLE} from './Renderer';
 
-export default (levelIndex) => {
-    return parse(levels[levelIndex]); // should be a Level
+let levelIndex = 0;
+
+export default {
+    /**
+     * return current level
+     */
+    level: () => {
+        return parse(levels[levelIndex]);
+    },
+    next: () => {
+        if(levelIndex < levels.length - 1) {
+            levelIndex++;
+        } else {
+            window.alert('win'); // TODO finish me
+        }
+    },
+    previous: () => {
+        if(levelIndex > 0) {
+            levelIndex--;
+        }
+    }
 }
 
 const parse = (level) => {
