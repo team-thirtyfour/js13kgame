@@ -1,6 +1,6 @@
 import Level from './Level';
 import Entity from './Entity';
-
+import {FORME_RECT, FORME_CIRCLE, FORME_TRIANGLE} from './Renderer';
 
 export default (levelIndex) => {
     return parse(levels[levelIndex]); // should be a Level
@@ -13,11 +13,11 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, 'circle', 'red', true, true);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, FORME_CIRCLE, 'red', true, true);
             case 'M':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, 'triangle', 'grey', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, FORME_TRIANGLE, 'grey', false, false);
             case 'T':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.2, 'rect', 'blue', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.2, FORME_RECT, 'blue', false, false);
         }
 
     });

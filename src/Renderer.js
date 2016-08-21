@@ -1,13 +1,17 @@
+export const FORME_RECT = 0;
+export const FORME_CIRCLE = 1;
+export const FORME_TRIANGLE = 2;
+
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
     const relative = compute(canvas, entity);
     ctx.fillStyle = entity.color;
     ctx.beginPath();
-    if(entity.forme === 'rect') {
+    if(entity.forme === FORME_RECT) {
         ctx.rect(relative.x, relative.y, relative.width, relative.height);
-    } else if(entity.forme === 'circle') {
+    } else if(entity.forme === FORME_CIRCLE) {
         ctx.arc(relative.x+relative.width/2, relative.y+relative.height/2, relative.width/2, 0, 2*Math.PI);
-    } else if(entity.forme === 'triangle') {
+    } else if(entity.forme === FORME_TRIANGLE) {
         ctx.moveTo(relative.x+relative.width/2, relative.y);
         ctx.lineTo(relative.x+relative.width, relative.y+relative.height);
         ctx.lineTo(relative.x, relative.y+relative.height)
