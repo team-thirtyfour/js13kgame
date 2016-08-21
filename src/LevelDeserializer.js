@@ -1,6 +1,6 @@
 import Level from './Level';
 import Entity from './Entity';
-import {FORME_RECT, FORME_CIRCLE, FORME_TRIANGLE} from './Renderer';
+import {FORMS} from './Renderer';
 
 let levelIndex = 0;
 
@@ -32,13 +32,13 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, FORME_CIRCLE, 'red', true, true, false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', true, true, false, false);
             case 'M':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, FORME_TRIANGLE, 'grey', false, false, true, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, FORMS.TRIANGLE, 'grey', false, false, true, false);
             case 'T':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.5, FORME_RECT, 'blue', false, false, false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.5, FORMS.RECT, 'blue', false, false, false, false);
             case 'G':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), 3, 5, 0, 0, 0, 0, FORME_RECT, 'violet', false, false, false, true);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', false, false, false, true);
         }
 
     });
