@@ -6,7 +6,7 @@ import Keyboard from './Keyboard';
 const FRAMERATE = 60;
 const rAF = requestAnimationFrame || function(cb) { setTimeout(cb, 1 / FRAMERATE * 1000) };
 
-export default (level, onGameOver) => {
+export default (level, onGameFinished, onGameOver) => {
 
     let lastTime;
     const loop = () => {
@@ -23,7 +23,10 @@ export default (level, onGameOver) => {
         // On est pas sur de cet ordre
         // TODO use delta time in update
         Physics.update(level, deltaTime);
-        Collision.check(level);
+        const gameIsWin = Collision.check(level);
+        if(gameIsWin) {
+            return onGameFinished();
+        }
         Renderer.render(level);
 
         //Check la fin du niveau (mort ou a atteint la porte)

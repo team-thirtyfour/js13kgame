@@ -7,7 +7,13 @@ const checkCollision = (eA, eB) => {
 
 export default {
 
+    /**
+     *
+     * @param level
+     * @returns {boolean} true when game is won
+     */
     check: (level) => {
+        let gameIsWin = false;
         //TODO naive implementation == change me
         level.entities.forEach((eA) => {
             eA.canJump = false;
@@ -16,13 +22,23 @@ export default {
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
                     eA.y = eB.y - eA.height;
-                    if(eB.collisionFactorY < 0){
-                      //This means that we can jump or bounce on the surface
+
+                    //This means that we can jump or bounce on the surface
+                    if(eB.collisionFactorY < 0) {
                       eA.canJump = true;
+                    }
+
+                    if(eB.isKiller) {
+                        eA.isKilled = true;
+                    }
+
+                    if(eB.isFinisher) {
+                        gameIsWin = true;
                     }
                 }
             });
         });
+        return gameIsWin;
     },
     checkGameOver: (level) => {
         // when 1 controllable entity is outside of game

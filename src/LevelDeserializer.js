@@ -13,11 +13,13 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, FORME_CIRCLE, 'red', true, true);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, FORME_CIRCLE, 'red', true, true, false, false);
             case 'M':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, FORME_TRIANGLE, 'grey', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, FORME_TRIANGLE, 'grey', false, false, true, false);
             case 'T':
-                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.5, FORME_RECT, 'blue', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.5, FORME_RECT, 'blue', false, false, false, false);
+            case 'G':
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 3, 5, 0, 0, 0, 0, FORME_RECT, 'violet', false, false, false, true);
         }
 
     });
@@ -33,7 +35,7 @@ const parse = (level) => {
  */
 const levels = [
       //level 1
-    [0.05,'J,10,10/T,0,50,80,2/M,50,0,2,50' ]
+    [0.05,'J,10,10/T,0,50,80,2/M,50,10,2,40/G,70,45' ]
     , // level 2
-    [0.05,'J,50,10/M,0,90,95,2']
+    [0.05,'J,50,10/T,0,90,95,2/G,90,5']
 ];

@@ -1,4 +1,4 @@
-export default (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isControllable) => {
+export default (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isControllable, isKiller, isFinisher) => {
     return {
         x: x,
         y: y,
@@ -12,7 +12,10 @@ export default (x, y, width, height, velX, velY, collisionFactorX, collisionFact
         color: color,
         isMovable: isMovable,
         isControllable: isControllable,
+        isKiller: isKiller,
+        isFinisher: isFinisher,
 
+        isKilled: false,
         canJump: false
     };
 }
