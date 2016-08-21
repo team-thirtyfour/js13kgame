@@ -13,16 +13,16 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return new Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, 'circle', 'red', true, true);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, 'circle', 'red', true, true);
             case 'M':
-                return new Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, 'square', 'grey', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, 'square', 'grey', false, false);
             case 'T':
-                return new Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.2, 'square', 'blue', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.2, 'square', 'blue', false, false);
         }
 
     });
 
-    return new Level(entities, level[0]);
+    return Level(entities, level[0]);
 };
 
 /**
