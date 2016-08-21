@@ -1,9 +1,28 @@
 import Level from './Level';
 import Entity from './Entity';
+import {FORME_RECT, FORME_CIRCLE, FORME_TRIANGLE} from './Renderer';
 
+let levelIndex = 0;
 
-export default (levelIndex) => {
-    return parse(levels[levelIndex]); // should be a Level
+export default {
+    /**
+     * return current level
+     */
+    level: () => {
+        return parse(levels[levelIndex]);
+    },
+    next: () => {
+        if(levelIndex < levels.length - 1) {
+            levelIndex++;
+        } else {
+            window.alert('win'); // TODO finish me
+        }
+    },
+    previous: () => {
+        if(levelIndex > 0) {
+            levelIndex--;
+        }
+    }
 }
 
 const parse = (level) => {
@@ -13,16 +32,18 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return new Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, 'circle', 'red', true, true);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 2, 2, 0, 0, 0, 0, FORME_CIRCLE, 'red', true, true, false, false);
             case 'M':
-                return new Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, 'square', 'grey', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, 0, FORME_TRIANGLE, 'grey', false, false, true, false);
             case 'T':
-                return new Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.2, 'square', 'blue', false, false);
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), parseFloat(str[3]), parseFloat(str[4]), 0, 0, 0, -0.5, FORME_RECT, 'blue', false, false, false, false);
+            case 'G':
+                return Entity(parseFloat(str[1]), parseFloat(str[2]), 3, 5, 0, 0, 0, 0, FORME_RECT, 'violet', false, false, false, true);
         }
 
     });
 
-    return new Level(entities, level[0]);
+    return Level(entities, level[0]);
 };
 
 /**
@@ -33,7 +54,7 @@ const parse = (level) => {
  */
 const levels = [
       //level 1
-    [0.05,'J,10,10/T,0,50,80,2/M,50,0,2,50' ]
+    [0.05,'J,10,10/T,0,50,80,2/M,50,10,2,40/G,70,45' ]
     , // level 2
-    [0.05,'J,50,10/M,0,90,95,2']
+    [0.05,'J,50,10/T,0,90,95,2/G,90,5']
 ];

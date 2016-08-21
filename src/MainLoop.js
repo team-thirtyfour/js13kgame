@@ -4,26 +4,40 @@ import Collision from './Collision';
 import Keyboard from './Keyboard';
 
 const FRAMERATE = 60;
+const rAF = requestAnimationFrame || function(cb) { setTimeout(cb, 1 / FRAMERATE * 1000) };
 
-export default (level, canvasMovable, canvasStatic) => {
+export default (level, onGameFinished, onGameOver) => {
 
-  const loop = () => {
+    let lastTime;
+    const loop = () => {
 
-    Keyboard(level);
+        if(Collision.checkGameOver(level)) {
+            return onGameOver();
+        }
 
-    // On est pas sur de cet ordre
-    Physics.update(level);
-    Renderer.render(level, canvasMovable, canvasStatic);
-    Collision.check(level);
+        const now = Date.now();
+        const deltaTime = (now - lastTime) / 1000.0;
 
-    //Check la fin du niveau (mort ou a atteint la porte)
-    //c'est une collision dans tous les cas, a voir si on la fait
-    //directement dans Collision
+        Keyboard(level);
 
-    setTimeout(loop, 1 / FRAMERATE * 1000);
-  };
+        // On est pas sur de cet ordre
+        // TODO use delta time in update
+        Physics.update(level, deltaTime);
+        const gameIsWin = Collision.check(level);
+        if(gameIsWin) {
+            return onGameFinished();
+        }
+        Renderer.render(level);
 
-  Renderer.init(level, canvasMovable, canvasStatic);
-  loop();
+        //Check la fin du niveau (mort ou a atteint la porte)
+        //c'est une collision dans tous les cas, a voir si on la fait
+        //directement dans Collision
+
+        lastTime = now;
+        rAF(loop);
+    };
+
+    Renderer.init(level);
+    loop();
 
 }
