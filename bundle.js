@@ -99,8 +99,27 @@ window.addEventListener('resize', () => {
     Renderer.init(level, canvasMovable, canvasStatic);
 }, false);
 
-var LevelDeserializer = (levelIndex) => {
-    return parse(levels[levelIndex]); // should be a Level
+let levelIndex = 0;
+
+var LevelDeserializer = {
+    /**
+     * return current level
+     */
+    level: () => {
+        return parse(levels[levelIndex]);
+    },
+    next: () => {
+        if(levelIndex < levels.length - 1) {
+            levelIndex++;
+        } else {
+            window.alert('win'); // TODO finish me
+        }
+    },
+    previous: () => {
+        if(levelIndex > 0) {
+            levelIndex--;
+        }
+    }
 }
 
 const parse = (level) => {
@@ -274,12 +293,20 @@ var MainLoop = (level, onGameFinished, onGameOver) => {
 
 }
 
-let levelIndex = 0;
+const win = () => {
+    LevelDeserializer.next();
+    start();
+};
+
+const loose = () => {
+    LevelDeserializer.previous();
+    start();
+};
 
 const start = () => {
-    const level = LevelDeserializer(levelIndex);
+    const level = LevelDeserializer.level();
     Console(level);
-    MainLoop(level, () => {levelIndex++; start();}, start);
+    MainLoop(level, win, loose);
 };
 
 start();
