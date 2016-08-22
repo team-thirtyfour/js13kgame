@@ -4,22 +4,20 @@ export const FORMS = {
     TRIANGLE: 2
 };
 
-const formsFunc = {
-    0: (c, r) => c.rect(r.x, r.y, r.width, r.height),
-    1: (c, r) => c.arc(r.x + r.width / 2, r.y + r.height / 2, r.width / 2, 0, 2 * Math.PI),
-    2: (c, r) => {
-        c.moveTo(r.x + r.width / 2, r.y);
-        c.lineTo(r.x + r.width, r.y + r.height);
-        c.lineTo(r.x, r.y + r.height)
-    }
-};
-
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
     const relative = compute(canvas, entity);
     ctx.fillStyle = entity.color;
     ctx.beginPath();
-    formsFunc[entity.forme](ctx, relative);
+    if(entity.forme === FORMS.RECT) {
+        ctx.rect(relative.x, relative.y, relative.width, relative.height);
+    } else if(entity.forme === FORMS.CIRCLE) {
+        ctx.arc(relative.x+relative.width/2, relative.y+relative.height/2, relative.width/2, 0, 2*Math.PI);
+    } else if(entity.forme === FORMS.TRIANGLE) {
+        ctx.moveTo(relative.x+relative.width/2, relative.y);
+        ctx.lineTo(relative.x+relative.width, relative.y+relative.height);
+        ctx.lineTo(relative.x, relative.y+relative.height)
+    }
     ctx.closePath();
     ctx.fill();
 };
