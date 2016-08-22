@@ -1,17 +1,19 @@
-export const FORME_RECT = 0;
-export const FORME_CIRCLE = 1;
-export const FORME_TRIANGLE = 2;
+export const FORMS = {
+    RECT: 0,
+    CIRCLE: 1,
+    TRIANGLE: 2
+};
 
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
     const relative = compute(canvas, entity);
     ctx.fillStyle = entity.color;
     ctx.beginPath();
-    if(entity.forme === FORME_RECT) {
+    if(entity.forme === FORMS.RECT) {
         ctx.rect(relative.x, relative.y, relative.width, relative.height);
-    } else if(entity.forme === FORME_CIRCLE) {
+    } else if(entity.forme === FORMS.CIRCLE) {
         ctx.arc(relative.x+relative.width/2, relative.y+relative.height/2, relative.width/2, 0, 2*Math.PI);
-    } else if(entity.forme === FORME_TRIANGLE) {
+    } else if(entity.forme === FORMS.TRIANGLE) {
         ctx.moveTo(relative.x+relative.width/2, relative.y);
         ctx.lineTo(relative.x+relative.width, relative.y+relative.height);
         ctx.lineTo(relative.x, relative.y+relative.height)
@@ -35,13 +37,13 @@ const draw = (canvas, entities) => {
     entities.forEach((e) => render(canvas, ctx, e));
 };
 
+const init = (level) => {
+    draw(canvasMovable, level.entities.filter((e) => e.isMovable));
+    draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
+};
+
 export default {
-
-    init: (level) => {
-        draw(canvasMovable, level.entities.filter((e) => e.isMovable));
-        draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
-    },
-
+    init: init,
     render: (level) => {
         draw(canvasMovable, level.entities.filter((e) => e.isMovable));
     }
@@ -62,5 +64,5 @@ window.addEventListener('resize', () => {
     canvasStatic.height = window.innerHeight * 0.8;
     canvasMovable.width = window.innerWidth * 0.8;
     canvasMovable.height = window.innerHeight * 0.8;
-    Renderer.init(level, canvasMovable, canvasStatic);
+    init(level, canvasMovable, canvasStatic);
 }, false);

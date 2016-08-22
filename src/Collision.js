@@ -13,7 +13,7 @@ export default {
      * @returns {boolean} true when game is won
      */
     check: (level) => {
-        let gameIsWin = false;
+        let gameIsWon = false;
         //TODO naive implementation == change me
         level.entities.forEach((eA) => {
             eA.canJump = false;
@@ -32,13 +32,11 @@ export default {
                         eA.isKilled = true;
                     }
 
-                    if(eB.isFinisher) {
-                        gameIsWin = true;
-                    }
+                    gameIsWon = eB.isFinisher;
                 }
             });
         });
-        return gameIsWin;
+        return gameIsWon;
     },
     checkGameOver: (level) => {
         // when 1 controllable entity is outside of game
