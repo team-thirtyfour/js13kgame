@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 
 
 gulp.task('watching', function () {
-    gulp.watch(conf.source.path.js, ['bundlejs']);
+    gulp.watch(conf.source.path.js, ['bundlejs','jshint']);
     gulp.watch(conf.source.path.css, ['css']);
     gulp.watch(conf.source.path.indexhtml, ['copy-html']);
     // gulp.watch(TESTS_SOURCE_PATH, ['tests']);
