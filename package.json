@@ -4,18 +4,19 @@
   "description": "Glitch or die trying",
   "main": "src/main.js",
   "scripts": {
+    "dev": "gulp watch",
+    "build": "gulp build --uglify",
+    "build-debug": "gulp --uglify --sourcemaps",
+    "build-google": "gulp build --googlecompiler",
+    "build-google-debug": "gulp build --googlecompiler --sourcemaps",
+    "release": "gulp release --uglify",
+    "deploy": "npm run release && gh-pages -d ./dist -m \"Size: $(find ./dist -maxdepth 1 -printf '%s\t%f\n' | grep game.gz | grep -Po '[0-9]+')\"",
     "test": "rollup -i src/mainSpec.js -o dist/bundle-tests.js && babel dist/bundle-tests.js --out-file dist/bundle-tests-es5.js",
-    "dev": "watch 'npm run test && npm run devjs' ./src",
-    "devjs": "rollup -c -o dist/bundle.js && babel dist/bundle.js | indexhtmlify --title js13kgame --style src/main.css > dist/index.html",
-    "build": "rollup -c -o dist/bundle.js && babel dist/bundle.js | uglifyjs -cm | indexhtmlify --title js13kgame --style src/main.css | html-minifier --minify-css > dist/index.html",
-    "gulp-build": "gulp build --uglify",
-    "gulp-build-debug": "gulp --uglify --sourcemaps",
-    "gulp-google": "gulp build --googlecompiler",
-    "gulp-google-debug": "gulp build --googlecompiler --sourcemaps",
-    "gulp-dev": "gulp watch",
-    "gulp-release": "gulp release --uglify",
-    "release": "gzip -9 -c dist/index.html > dist/game.gz",
-    "deploy": "npm run build && npm run release && gh-pages -d ./dist -m \"Size: $(find ./dist -maxdepth 1 -printf '%s\t%f\n' | grep game.gz | grep -Po '[0-9]+')\""
+
+    "dev.old": "watch 'npm run test && npm run devjs' ./src",
+    "devjs.old": "rollup -c -o dist/bundle.js && babel dist/bundle.js | indexhtmlify --title js13kgame --style src/main.css > dist/index.html",
+    "build.old": "rollup -c -o dist/bundle.js && babel dist/bundle.js | uglifyjs -cm | indexhtmlify --title js13kgame --style src/main.css | html-minifier --minify-css > dist/index.html",
+    "release.old": "gzip -9 -c dist/index.html > dist/game.gz"
   },
   "repository": {
     "type": "git",
