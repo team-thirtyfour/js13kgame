@@ -61,5 +61,12 @@ module.exports = {
             output_wrapper: '(function(){\n%output%\n}).call(this)',
             js_output_file: BUNDLE_NAME
         }
+    },
+    server: {
+        options: {
+            port: 8888,
+            livereload: true,
+            root: 'dist'
+        }
     }
 };
