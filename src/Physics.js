@@ -1,9 +1,9 @@
 export default {
-    update: (level) => {
+    update: (level, deltaTime) => {
         level.movableEntities.forEach((e) => {
-            e.x += e.velX;
+            e.x += deltaTime * e.velX;
             e.velX = 0;
-            e.y += e.velY;
+            e.y += deltaTime * e.velY;
             e.velY += level.gravity;
         });
     }

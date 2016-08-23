@@ -8,7 +8,7 @@ const rAF = requestAnimationFrame || function(cb) { setTimeout(cb, 1 / FRAMERATE
 
 export default (level, onGameFinished, onGameOver) => {
 
-    let lastTime;
+    let lastTime = 0;
     const loop = () => {
 
         if(Collision.checkGameOver(level)) {
@@ -21,7 +21,6 @@ export default (level, onGameFinished, onGameOver) => {
         Keyboard(level);
 
         // On est pas sur de cet ordre
-        // TODO use delta time in update
         Physics.update(level, deltaTime);
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {
