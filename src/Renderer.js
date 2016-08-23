@@ -1,7 +1,8 @@
 export const FORMS = {
     RECT: 0,
     CIRCLE: 1,
-    TRIANGLE: 2
+    TRIANGLE: 2,
+    TRIANGLE_DOWN: 3
 };
 
 let needToDrawStatic = true;
@@ -19,6 +20,10 @@ const render = (canvas, ctx, entity) => {
         ctx.moveTo(relative.x+relative.width/2, relative.y);
         ctx.lineTo(relative.x+relative.width, relative.y+relative.height);
         ctx.lineTo(relative.x, relative.y+relative.height);
+    } else if(entity.forme === FORMS.TRIANGLE_DOWN) {
+        ctx.moveTo(relative.x, relative.y);
+        ctx.lineTo(relative.x+relative.width, relative.y);
+        ctx.lineTo(relative.x+relative.width/2, relative.y+relative.height);
     }
     ctx.closePath();
     ctx.fill();
