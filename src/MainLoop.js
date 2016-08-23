@@ -11,10 +11,6 @@ export default (level, onGameFinished, onGameOver) => {
     let lastTime = 0;
     const loop = () => {
 
-        if(Collision.checkGameOver(level)) {
-            return onGameOver();
-        }
-
         const now = Date.now();
         const deltaTime = (now - lastTime) / 1000.0;
 
@@ -22,6 +18,11 @@ export default (level, onGameFinished, onGameOver) => {
 
         // On est pas sur de cet ordre
         Physics.update(level, deltaTime);
+
+        if(Collision.checkGameOver(level) && lastTime > 0) {
+            return onGameOver();
+        }
+
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {
             return onGameFinished();
