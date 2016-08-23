@@ -16,7 +16,7 @@ const render = (canvas, ctx, entity) => {
     } else if(entity.forme === FORMS.TRIANGLE) {
         ctx.moveTo(relative.x+relative.width/2, relative.y);
         ctx.lineTo(relative.x+relative.width, relative.y+relative.height);
-        ctx.lineTo(relative.x, relative.y+relative.height)
+        ctx.lineTo(relative.x, relative.y+relative.height);
     }
     ctx.closePath();
     ctx.fill();
@@ -28,7 +28,7 @@ const compute = (canvas, entity) => {
         y: entity.y * canvas.height / 100,
         width: entity.width * canvas.width / 100,
         height: entity.height * canvas.height / 100
-    }
+    };
 };
 
 const draw = (canvas, entities) => {
@@ -47,7 +47,7 @@ export default {
     render: (level) => {
         draw(canvasMovable, level.entities.filter((e) => e.isMovable));
     }
-}
+};
 
 var canvasStatic = document.createElement('canvas');
 canvasStatic.width = window.innerWidth * 0.8;

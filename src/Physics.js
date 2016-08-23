@@ -7,4 +7,4 @@ export default {
             e.velY += level.gravity;
         });
     }
-}
+};

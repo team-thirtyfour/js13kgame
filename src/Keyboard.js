@@ -30,4 +30,4 @@ export default (level) => {
             e.velY += JUMP;
         }
     });
-}
+};

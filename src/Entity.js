@@ -17,4 +17,4 @@ export default (x, y, width, height, velX, velY, collisionFactorX, collisionFact
         isKilled: false,
         canJump: false
     };
-}
+};

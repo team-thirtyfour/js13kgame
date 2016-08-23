@@ -23,7 +23,7 @@ export default {
             levelIndex--;
         }
     }
-}
+};
 
 const parse = (level) => {
 
@@ -53,8 +53,6 @@ const parse = (level) => {
  * T,x,y,w,h : Trampoline => new Entity(x, y, w, h, 0, 0, 0, -0.2, 'square', 'bleu', false, false)
  */
 const levels = [
-      //level 1
-    [0.05,'J,10,10/T,0,50,80,2/M,50,10,2,40/G,70,45' ]
-    , // level 2
+    [0.05,'J,10,10/T,0,50,80,2/M,50,10,2,40/G,70,45' ],
     [0.05,'J,50,10/T,0,90,95,2/G,90,5']
 ];

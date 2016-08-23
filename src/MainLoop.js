@@ -4,7 +4,7 @@ import Collision from './Collision';
 import Keyboard from './Keyboard';
 
 const FRAMERATE = 60;
-const rAF = requestAnimationFrame || function(cb) { setTimeout(cb, 1 / FRAMERATE * 1000) };
+const rAF = requestAnimationFrame || function(cb) { setTimeout(cb, 1 / FRAMERATE * 1000); };
 
 export default (level, onGameFinished, onGameOver) => {
 
@@ -40,4 +40,4 @@ export default (level, onGameFinished, onGameOver) => {
     Renderer.init(level);
     loop();
 
-}
+};
