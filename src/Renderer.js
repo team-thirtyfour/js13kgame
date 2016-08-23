@@ -4,6 +4,8 @@ export const FORMS = {
     TRIANGLE: 2
 };
 
+let needToDrawStatic = true;
+
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
     const relative = compute(canvas, entity);
@@ -37,14 +39,15 @@ const draw = (canvas, entities) => {
     entities.forEach((e) => render(canvas, ctx, e));
 };
 
-const init = (level) => {
-    draw(canvasMovable, level.entities.filter((e) => e.isMovable));
-    draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
-};
-
 export default {
-    init: init,
+    init: () => {
+        needToDrawStatic = true;
+    },
     render: (level) => {
+        if(needToDrawStatic) {
+            needToDrawStatic = false;
+            draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
+        }
         draw(canvasMovable, level.entities.filter((e) => e.isMovable));
     }
 };
@@ -64,5 +67,5 @@ window.addEventListener('resize', () => {
     canvasStatic.height = window.innerHeight * 0.8;
     canvasMovable.width = window.innerWidth * 0.8;
     canvasMovable.height = window.innerHeight * 0.8;
-    init(level, canvasMovable, canvasStatic);
+    needToDrawStatic = true;
 }, false);

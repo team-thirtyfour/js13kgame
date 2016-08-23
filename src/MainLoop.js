@@ -37,7 +37,7 @@ export default (level, onGameFinished, onGameOver) => {
         rAF(loop);
     };
 
-    Renderer.init(level);
+    Renderer.init();
     loop();
 
 };
