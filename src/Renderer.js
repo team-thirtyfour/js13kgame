@@ -1,8 +1,11 @@
 export const FORMS = {
     RECT: 0,
     CIRCLE: 1,
-    TRIANGLE: 2
+    TRIANGLE: 2,
+    TRIANGLE_DOWN: 3
 };
+
+let needToDrawStatic = true;
 
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
@@ -16,7 +19,11 @@ const render = (canvas, ctx, entity) => {
     } else if(entity.forme === FORMS.TRIANGLE) {
         ctx.moveTo(relative.x+relative.width/2, relative.y);
         ctx.lineTo(relative.x+relative.width, relative.y+relative.height);
-        ctx.lineTo(relative.x, relative.y+relative.height)
+        ctx.lineTo(relative.x, relative.y+relative.height);
+    } else if(entity.forme === FORMS.TRIANGLE_DOWN) {
+        ctx.moveTo(relative.x, relative.y);
+        ctx.lineTo(relative.x+relative.width, relative.y);
+        ctx.lineTo(relative.x+relative.width/2, relative.y+relative.height);
     }
     ctx.closePath();
     ctx.fill();
@@ -28,7 +35,7 @@ const compute = (canvas, entity) => {
         y: entity.y * canvas.height / 100,
         width: entity.width * canvas.width / 100,
         height: entity.height * canvas.height / 100
-    }
+    };
 };
 
 const draw = (canvas, entities) => {
@@ -37,17 +44,18 @@ const draw = (canvas, entities) => {
     entities.forEach((e) => render(canvas, ctx, e));
 };
 
-const init = (level) => {
-    draw(canvasMovable, level.entities.filter((e) => e.isMovable));
-    draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
-};
-
 export default {
-    init: init,
+    init: () => {
+        needToDrawStatic = true;
+    },
     render: (level) => {
+        if(needToDrawStatic) {
+            needToDrawStatic = false;
+            draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
+        }
         draw(canvasMovable, level.entities.filter((e) => e.isMovable));
     }
-}
+};
 
 var canvasStatic = document.createElement('canvas');
 canvasStatic.width = window.innerWidth * 0.8;
@@ -64,5 +72,5 @@ window.addEventListener('resize', () => {
     canvasStatic.height = window.innerHeight * 0.8;
     canvasMovable.width = window.innerWidth * 0.8;
     canvasMovable.height = window.innerHeight * 0.8;
-    init(level, canvasMovable, canvasStatic);
+    needToDrawStatic = true;
 }, false);

@@ -1,8 +1,5 @@
 const checkCollision = (eA, eB) => {
-    return !((eA.x >= eB.x + eB.width)
-    || (eA.x + eA.width <= eB.x)
-    || (eA.y >= eB.y + eB.height)
-    || (eA.y + eA.height <= eB.y));
+    return !((eA.x >= eB.x + eB.width) || (eA.x + eA.width <= eB.x) || (eA.y >= eB.y + eB.height) || (eA.y + eA.height <= eB.y));
 };
 
 export default {
@@ -40,7 +37,7 @@ export default {
     },
     checkGameOver: (level) => {
         // when 1 controllable entity is outside of game
-        return !!level.controllableEntities.find((e) => e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0);
+        return !!level.controllableEntities.find((e) => e.isKilled || e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0);
     }
 
-}
+};

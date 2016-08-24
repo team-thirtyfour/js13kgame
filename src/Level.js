@@ -5,4 +5,4 @@ export default (entities, gravity) => {
         movableEntities: entities.filter((e) => e.isMovable),
         controllableEntities: entities.filter((e) => e.isControllable)
     };
-}
+};
