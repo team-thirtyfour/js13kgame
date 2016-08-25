@@ -18,16 +18,16 @@ export default (level, onGameFinished, onGameOver) => {
         const deltaTime = (now - lastTime) / 1000.0;
 
         Collision.garbageOffScreenEntities(level);
-        console.log(level.entities.length);
 
         Keyboard(level);
+
+        if(Collision.checkGameOver(level) && lastTime > 0) {
+          return onGameOver();
+        }
 
         // On est pas sur de cet ordre
         Physics.update(level, deltaTime);
 
-        if(Collision.checkGameOver(level) && lastTime > 0) {
-            return onGameOver();
-        }
 
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {

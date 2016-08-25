@@ -1,5 +1,39 @@
+const COL_TOP = 0;
+const COL_RIGHT = 1;
+const COL_BOTTOM = 2;
+const COL_LEFT = 3;
+
 const checkCollision = (eA, eB) => {
-    return !((eA.x >= eB.x + eB.width) || (eA.x + eA.width <= eB.x) || (eA.y >= eB.y + eB.height) || (eA.y + eA.height <= eB.y));
+    const collides =  !((eA.x >= eB.x + eB.width) || (eA.x + eA.width <= eB.x) || (eA.y >= eB.y + eB.height) || (eA.y + eA.height <= eB.y));
+    if(collides){
+
+      if(eA.x > eB.x && eA.y > eB.y){
+        if(eB.y > eA.y + eA.height){
+          return COL_TOP;
+        }else{
+          return COL_LEFT;
+        }
+      }else if (eA.x < eB.x && eA.y > eB.y){
+          if(eB.y > eA.y + eA.height){
+            return COL_TOP;
+          }else{
+            return COL_RIGHT;
+          }
+      }else if (eA.x < eB.x && eA.y < eB.y){
+        if(eB.y < eA.y + eA.height){
+          return COL_BOTTOM;
+        }else{
+          return COL_RIGHT;
+        }
+      }else{
+        if(eB.y < eA.y + eA.height){
+          return COL_BOTTOM;
+        }else{
+          return COL_LEFT;
+        }
+      }
+    }
+    return undefined;
 };
 
 const isOffScreen = (e) => {
@@ -18,21 +52,30 @@ export default {
         const eA = level.playerEntity;
         eA.canJump = false;
         level.entities.forEach((eB) => {
-            if(eA !== eB && checkCollision(eA, eB)) {
-                eA.velX *= eB.collisionFactorX;
-                eA.velY *= eB.collisionFactorY;
-                eA.y = eB.y - eA.height;
+            if(eA !== eB) {
+                const collision = checkCollision(eA, eB);
+                if(collision !== undefined){
+                  if(collision === COL_BOTTOM){
+                    eA.velX *= eB.collisionFactorX;
+                    eA.velY *= eB.collisionFactorY;
+                    eA.y = eB.y - eA.height;
+                  }else if (collision === COL_RIGHT){
+                    eA.x = eB.x - eA.width;
+                  }else if (collision === COL_LEFT){
+                    eA.x = eB.x + eB.width;
+                  }
 
-                //This means that we can jump or bounce on the surface
-                if(eB.collisionFactorY < 0) {
-                  eA.canJump = true;
+                  //This means that we can jump or bounce on the surface
+                  if(eB.collisionFactorY < 0) {
+                    eA.canJump = true;
+                  }
+
+                  if(eB.isKiller) {
+                      eA.isKilled = true;
+                  }
+
+                  gameIsWon = eB.isFinisher;
                 }
-
-                if(eB.isKiller) {
-                    eA.isKilled = true;
-                }
-
-                gameIsWon = eB.isFinisher;
             }
         });
         return gameIsWon;
