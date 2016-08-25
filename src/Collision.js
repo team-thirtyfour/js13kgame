@@ -2,6 +2,10 @@ const checkCollision = (eA, eB) => {
     return !((eA.x >= eB.x + eB.width) || (eA.x + eA.width <= eB.x) || (eA.y >= eB.y + eB.height) || (eA.y + eA.height <= eB.y));
 };
 
+const isOffScreen = (e) => {
+  return e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0;
+};
+
 export default {
 
     /**
@@ -35,7 +39,14 @@ export default {
     },
     checkGameOver: (level) => {
         const e = level.playerEntity;
-        return e.isKilled || e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0;
+        return e.isKilled || isOffScreen(e);
+    },
+    garbageOffScreenEntities: (level) => {
+      for (let i = level.entities.length - 1; i > -1; i--){
+        const e = level.entities[i];
+        if(isOffScreen(e)){
+          level.entities.splice(level.entities.indexOf(e), 1);
+        }
+      }
     }
-
 };

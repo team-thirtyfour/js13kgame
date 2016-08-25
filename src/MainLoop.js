@@ -17,6 +17,9 @@ export default (level, onGameFinished, onGameOver) => {
         const now = Date.now();
         const deltaTime = (now - lastTime) / 1000.0;
 
+        Collision.garbageOffScreenEntities(level);
+        console.log(level.entities.length);
+
         Keyboard(level);
 
         // On est pas sur de cet ordre
