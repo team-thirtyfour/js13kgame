@@ -1,4 +1,4 @@
-export default (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isControllable, isKiller, isFinisher, childFactory) => {
+export default (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isPlayer, isKiller, isFinisher, childFactory) => {
     return {
         x: x,
         y: y,
@@ -11,7 +11,7 @@ export default (x, y, width, height, velX, velY, collisionFactorX, collisionFact
         forme: forme,
         color: color,
         isMovable: isMovable,
-        isControllable: isControllable,
+        isPlayer: isPlayer,
         isKiller: isKiller,
         isFinisher: isFinisher,
         childFactory: childFactory,

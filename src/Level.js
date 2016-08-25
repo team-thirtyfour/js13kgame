@@ -3,6 +3,6 @@ export default (entities, gravity) => {
         entities: entities,
         gravity: gravity,
         movableEntities: entities.filter((e) => e.isMovable),
-        controllableEntities: entities.filter((e) => e.isControllable)
+        playerEntity: entities.find((e) => e.isPlayer)
     };
 };

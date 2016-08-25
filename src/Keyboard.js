@@ -19,15 +19,14 @@ const JUMP = -50;
 
 export default (level) => {
 
-    level.controllableEntities.forEach((e) => {
-        if(keys[0]){
-            e.velX = -X;
-        }else if(keys[2]){
-            e.velX = X;
-        }
-        // permit to go right or left AND jump
-        if(keys[1] && e.canJump){
-            e.velY += JUMP;
-        }
-    });
+    const e = level.playerEntity;
+    if(keys[0]){
+        e.velX = -X;
+    }else if(keys[2]){
+        e.velX = X;
+    }
+    // permit to go right or left AND jump
+    if(keys[1] && e.canJump){
+        e.velY += JUMP;
+    }
 };

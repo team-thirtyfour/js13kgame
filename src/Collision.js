@@ -11,33 +11,31 @@ export default {
      */
     check: (level) => {
         let gameIsWon = false;
-        //TODO naive implementation == change me
-        level.entities.forEach((eA) => {
-            eA.canJump = false;
-            level.entities.forEach((eB) => {
-                if(eA !== eB && checkCollision(eA, eB)) {
-                    eA.velX *= eB.collisionFactorX;
-                    eA.velY *= eB.collisionFactorY;
-                    eA.y = eB.y - eA.height;
+        const eA = level.playerEntity;
+        eA.canJump = false;
+        level.entities.forEach((eB) => {
+            if(eA !== eB && checkCollision(eA, eB)) {
+                eA.velX *= eB.collisionFactorX;
+                eA.velY *= eB.collisionFactorY;
+                eA.y = eB.y - eA.height;
 
-                    //This means that we can jump or bounce on the surface
-                    if(eB.collisionFactorY < 0) {
-                      eA.canJump = true;
-                    }
-
-                    if(eB.isKiller) {
-                        eA.isKilled = true;
-                    }
-
-                    gameIsWon = eB.isFinisher;
+                //This means that we can jump or bounce on the surface
+                if(eB.collisionFactorY < 0) {
+                  eA.canJump = true;
                 }
-            });
+
+                if(eB.isKiller) {
+                    eA.isKilled = true;
+                }
+
+                gameIsWon = eB.isFinisher;
+            }
         });
         return gameIsWon;
     },
     checkGameOver: (level) => {
-        // when 1 controllable entity is outside of game
-        return !!level.controllableEntities.find((e) => e.isKilled || e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0);
+        const e = level.playerEntity;
+        return e.isKilled || e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0;
     }
 
 };

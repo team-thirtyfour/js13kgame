@@ -49,10 +49,10 @@ export default {
         needToDrawStatic = true;
     },
     render: (level) => {
-        if(needToDrawStatic) {
+    //    if(needToDrawStatic) {
             needToDrawStatic = false;
             draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
-        }
+      //  }
         draw(canvasMovable, level.entities.filter((e) => e.isMovable));
     }
 };
