@@ -6,11 +6,11 @@ var Level = (entities, gravity) => {
         entities: entities,
         gravity: gravity,
         movableEntities: entities.filter((e) => e.isMovable),
-        controllableEntities: entities.filter((e) => e.isControllable)
+        playerEntity: entities.find((e) => e.isPlayer)
     };
 };
 
-var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isControllable, isKiller, isFinisher, childFactory) => {
+var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isPlayer, isKiller, isFinisher, childFactory) => {
     return {
         x: x,
         y: y,
@@ -23,7 +23,7 @@ var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactor
         forme: forme,
         color: color,
         isMovable: isMovable,
-        isControllable: isControllable,
+        isPlayer: isPlayer,
         isKiller: isKiller,
         isFinisher: isFinisher,
         childFactory: childFactory,
@@ -168,7 +168,7 @@ const parse = (level) => {
                 return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.TRIANGLE_DOWN, 'orange', false, false, true, false);
             case 'A':
                 return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, false, true, false, () => {
-                    return Entity(50, 50, 0.5, 0.5, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', true, false, true, false);
+                    return Entity(50, 50, 0.5, 0.5, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, false, true, false);
                 });
         }
 
@@ -207,8 +207,46 @@ var Physics = {
     }
 };
 
+const COL_TOP = 0;
+const COL_RIGHT = 1;
+const COL_BOTTOM = 2;
+const COL_LEFT = 3;
+
 const checkCollision = (eA, eB) => {
-    return !((eA.x >= eB.x + eB.width) || (eA.x + eA.width <= eB.x) || (eA.y >= eB.y + eB.height) || (eA.y + eA.height <= eB.y));
+    const collides =  !((eA.x >= eB.x + eB.width) || (eA.x + eA.width <= eB.x) || (eA.y >= eB.y + eB.height) || (eA.y + eA.height <= eB.y));
+    if(collides){
+
+      if(eA.x > eB.x && eA.y > eB.y){
+        if(eB.y > eA.y + eA.height){
+          return COL_TOP;
+        }else{
+          return COL_LEFT;
+        }
+      }else if (eA.x < eB.x && eA.y > eB.y){
+          if(eB.y > eA.y + eA.height){
+            return COL_TOP;
+          }else{
+            return COL_RIGHT;
+          }
+      }else if (eA.x < eB.x && eA.y < eB.y){
+        if(eB.y < eA.y + eA.height){
+          return COL_BOTTOM;
+        }else{
+          return COL_RIGHT;
+        }
+      }else{
+        if(eB.y < eA.y + eA.height){
+          return COL_BOTTOM;
+        }else{
+          return COL_LEFT;
+        }
+      }
+    }
+    return undefined;
+};
+
+const isOffScreen = (e) => {
+  return e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0;
 };
 
 var Collision = {
@@ -220,35 +258,49 @@ var Collision = {
      */
     check: (level) => {
         let gameIsWon = false;
-        //TODO naive implementation == change me
-        level.entities.forEach((eA) => {
-            eA.canJump = false;
-            level.entities.forEach((eB) => {
-                if(eA !== eB && checkCollision(eA, eB)) {
+        const eA = level.playerEntity;
+        eA.canJump = false;
+        level.entities.forEach((eB) => {
+            if(eA !== eB) {
+                const collision = checkCollision(eA, eB);
+                if(collision !== undefined){
+                  if(collision === COL_BOTTOM){
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
                     eA.y = eB.y - eA.height;
+                  }else if (collision === COL_RIGHT){
+                    eA.x = eB.x - eA.width;
+                  }else if (collision === COL_LEFT){
+                    eA.x = eB.x + eB.width;
+                  }
 
-                    //This means that we can jump or bounce on the surface
-                    if(eB.collisionFactorY < 0) {
-                      eA.canJump = true;
-                    }
+                  //This means that we can jump or bounce on the surface
+                  if(eB.collisionFactorY < 0) {
+                    eA.canJump = true;
+                  }
 
-                    if(eB.isKiller) {
-                        eA.isKilled = true;
-                    }
+                  if(eB.isKiller) {
+                      eA.isKilled = true;
+                  }
 
-                    gameIsWon = eB.isFinisher;
+                  gameIsWon = eB.isFinisher;
                 }
-            });
+            }
         });
         return gameIsWon;
     },
     checkGameOver: (level) => {
-        // when 1 controllable entity is outside of game
-        return !!level.controllableEntities.find((e) => e.isKilled || e.x > 100 || e.x < 0 || e.y > 100 || e.y < 0);
+        const e = level.playerEntity;
+        return e.isKilled || isOffScreen(e);
+    },
+    garbageOffScreenEntities: (level) => {
+      for (let i = level.entities.length - 1; i > -1; i--){
+        const e = level.entities[i];
+        if(isOffScreen(e)){
+          level.entities.splice(level.entities.indexOf(e), 1);
+        }
+      }
     }
-
 };
 
 //LEFT=37, UP=38, RIGHT=39
@@ -272,17 +324,16 @@ const JUMP = -50;
 
 var Keyboard = (level) => {
 
-    level.controllableEntities.forEach((e) => {
-        if(keys[0]){
-            e.velX = -X;
-        }else if(keys[2]){
-            e.velX = X;
-        }
-        // permit to go right or left AND jump
-        if(keys[1] && e.canJump){
-            e.velY += JUMP;
-        }
-    });
+    const e = level.playerEntity;
+    if(keys[0]){
+        e.velX = -X;
+    }else if(keys[2]){
+        e.velX = X;
+    }
+    // permit to go right or left AND jump
+    if(keys[1] && e.canJump){
+        e.velY += JUMP;
+    }
 };
 
 const FRAMERATE = 60;
@@ -299,14 +350,17 @@ var MainLoop = (level, onGameFinished, onGameOver) => {
         const now = Date.now();
         const deltaTime = (now - lastTime) / 1000.0;
 
+        Collision.garbageOffScreenEntities(level);
+
         Keyboard(level);
+
+        if(Collision.checkGameOver(level) && lastTime > 0) {
+          return onGameOver();
+        }
 
         // On est pas sur de cet ordre
         Physics.update(level, deltaTime);
 
-        if(Collision.checkGameOver(level) && lastTime > 0) {
-            return onGameOver();
-        }
 
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {
