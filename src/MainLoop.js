@@ -2,6 +2,7 @@ import Physics from './Physics';
 import Renderer from './Renderer';
 import Collision from './Collision';
 import Keyboard from './Keyboard';
+import Console from './Console';
 
 const FRAMERATE = 60;
 const rAF = requestAnimationFrame || function(cb) { setTimeout(cb, 1 / FRAMERATE * 1000); };
@@ -20,6 +21,7 @@ export default (level, onGameFinished, onGameOver) => {
         Collision.garbageOffScreenEntities(level);
 
         Keyboard(level);
+        Console(level);
 
         if(Collision.checkGameOver(level) && lastTime > 0) {
           return onGameOver();
