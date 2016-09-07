@@ -194,7 +194,12 @@ const levels = [
     [1,'J,50,10|T,0,90,95,2|G,90,5|F,55,0,10,10']
 ];
 
-var Console = (/*level*/) => {
+var Console = (level) => {
+
+	let gravity = parseFloat(document.getElementById('gravityInput').value);
+	if(!isNaN(gravity)){
+		level.gravity = gravity;
+	}
 
 };
 
@@ -364,6 +369,7 @@ var MainLoop = (level, onGameFinished, onGameOver) => {
         Collision.garbageOffScreenEntities(level);
 
         Keyboard(level);
+        Console(level);
 
         if(Collision.checkGameOver(level) && lastTime > 0) {
           return onGameOver();
