@@ -5,4 +5,7 @@ export default (level) => {
 		level.gravity = gravity;
 	}
 
+	let pause = document.getElementById('pauseCheckbox').checked;
+	level.pause = pause;
+
 };

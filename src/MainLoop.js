@@ -20,7 +20,7 @@ export default (level, onGameFinished, onGameOver) => {
 
         Collision.garbageOffScreenEntities(level);
 
-        Keyboard(level);
+        
         Console(level);
 
         if(Collision.checkGameOver(level) && lastTime > 0) {
@@ -28,9 +28,11 @@ export default (level, onGameFinished, onGameOver) => {
         }
 
         // On est pas sur de cet ordre
-        Physics.update(level, deltaTime);
-
-
+        if(!level.pause){
+            Keyboard(level);
+            Physics.update(level, deltaTime);
+        }
+        
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {
             return onGameFinished();
