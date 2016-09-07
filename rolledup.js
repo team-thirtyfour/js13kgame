@@ -10,7 +10,7 @@ var Level = (entities, gravity) => {
     };
 };
 
-var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isPlayer, isKiller, isFinisher, childFactory) => {
+var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isPlayer, isKiller, isFinisher, collider, childFactory) => {
     return {
         x: x,
         y: y,
@@ -27,6 +27,7 @@ var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactor
         isKiller: isKiller,
         isFinisher: isFinisher,
         childFactory: childFactory,
+        collider: collider,
         isKilled: false,
         canJump: false
     };
@@ -157,23 +158,24 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', true, true, false, false);
+                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', true, true, false, false, true);
             case 'M':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', false, false, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', false, false, false, false, false);
             case 'T':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', false, false, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', false, false, false, false, false);
+            case 'T_C':
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.RECT, 'violet', true, false, false, false, true);
             case 'G':
-                return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', false, false, false, true);
+                return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', false, false, false, true, false);
             case 'F':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.TRIANGLE_DOWN, 'orange', false, false, true, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.TRIANGLE_DOWN, 'orange', false, false, true, false, false);
             case 'A':
-                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, false, true, false, () => {
-                    return Entity(50, 50, 0.5, 0.5, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', true, false, true, false);
+                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, false, true, false, false, () => {
+                    return Entity(50, 50, 0.5, 0.5, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', true, false, true, false, false);
                 });
         }
 
     });
-
     return Level(entities, level[0]);
 };
 
@@ -217,13 +219,13 @@ const checkCollision = (eA, eB) => {
     if(collides){
 
       if(eA.x > eB.x && eA.y > eB.y){
-        if(eB.y > eA.y + eA.height){
+        if(eB.y > eA.y - eA.height){
           return COL_TOP;
         }else{
           return COL_LEFT;
         }
       }else if (eA.x < eB.x && eA.y > eB.y){
-          if(eB.y > eA.y + eA.height){
+          if(eB.y > eA.y - eA.height){
             return COL_TOP;
           }else{
             return COL_RIGHT;
@@ -258,34 +260,43 @@ var Collision = {
      */
     check: (level) => {
         let gameIsWon = false;
-        const eA = level.playerEntity;
-        eA.canJump = false;
-        level.entities.forEach((eB) => {
+        level.playerEntity.canJump = false;
+        level.entities.forEach((eA) => {
+          level.entities.forEach((eB) => {
             if(eA !== eB) {
+              if(eA.collider) {
                 const collision = checkCollision(eA, eB);
                 if(collision !== undefined){
                   if(collision === COL_BOTTOM){
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
                     eA.y = eB.y - eA.height;
+                  }else if (collision === COL_TOP){
+                    eA.velX *= eB.collisionFactorX;
+                    eA.velY *= eB.collisionFactorY;
+                    eA.y = eB.y + eA.height;
                   }else if (collision === COL_RIGHT){
                     eA.x = eB.x - eA.width;
                   }else if (collision === COL_LEFT){
                     eA.x = eB.x + eB.width;
                   }
+                  if(eA === level.playerEntity) {
 
-                  //This means that we can jump or bounce on the surface
-                  if(eB.collisionFactorY < 0) {
-                    eA.canJump = true;
+                    //This means that we can jump or bounce on the surface
+                    if(eB.collisionFactorY < 0) {
+                      eA.canJump = true;
+                    }
+
+                    if(eB.isKiller) {
+                        eA.isKilled = true;
+                    }
+
+                    gameIsWon = eB.isFinisher;
                   }
-
-                  if(eB.isKiller) {
-                      eA.isKilled = true;
-                  }
-
-                  gameIsWon = eB.isFinisher;
                 }
+              }
             }
+          });
         });
         return gameIsWon;
     },
