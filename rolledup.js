@@ -6,7 +6,8 @@ var Level = (entities, gravity) => {
         entities: entities,
         gravity: gravity,
         movableEntities: entities.filter((e) => e.isMovable),
-        playerEntity: entities.find((e) => e.isPlayer)
+        playerEntity: entities.find((e) => e.isPlayer),
+        pause: false
     };
 };
 
@@ -201,6 +202,9 @@ var Console = (level) => {
 		level.gravity = gravity;
 	}
 
+	let pause = document.getElementById('pauseCheckbox').checked;
+	level.pause = pause;
+
 };
 
 var Physics = {
@@ -368,7 +372,7 @@ var MainLoop = (level, onGameFinished, onGameOver) => {
 
         Collision.garbageOffScreenEntities(level);
 
-        Keyboard(level);
+        
         Console(level);
 
         if(Collision.checkGameOver(level) && lastTime > 0) {
@@ -376,9 +380,11 @@ var MainLoop = (level, onGameFinished, onGameOver) => {
         }
 
         // On est pas sur de cet ordre
-        Physics.update(level, deltaTime);
-
-
+        if(!level.pause){
+            Keyboard(level);
+            Physics.update(level, deltaTime);
+        }
+        
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {
             return onGameFinished();
