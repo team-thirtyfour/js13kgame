@@ -8,13 +8,13 @@ const checkCollision = (eA, eB) => {
     if(collides){
 
       if(eA.x > eB.x && eA.y > eB.y){
-        if(eB.y > eA.y + eA.height){
+        if(eB.y > eA.y - eA.height){
           return COL_TOP;
         }else{
           return COL_LEFT;
         }
       }else if (eA.x < eB.x && eA.y > eB.y){
-          if(eB.y > eA.y + eA.height){
+          if(eB.y > eA.y - eA.height){
             return COL_TOP;
           }else{
             return COL_RIGHT;
@@ -49,34 +49,43 @@ export default {
      */
     check: (level) => {
         let gameIsWon = false;
-        const eA = level.playerEntity;
-        eA.canJump = false;
-        level.entities.forEach((eB) => {
+        level.playerEntity.canJump = false;
+        level.entities.forEach((eA) => {
+          level.entities.forEach((eB) => {
             if(eA !== eB) {
+              if(eA.collider) {
                 const collision = checkCollision(eA, eB);
                 if(collision !== undefined){
                   if(collision === COL_BOTTOM){
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
                     eA.y = eB.y - eA.height;
+                  }else if (collision === COL_TOP){
+                    eA.velX *= eB.collisionFactorX;
+                    eA.velY *= eB.collisionFactorY;
+                    eA.y = eB.y + eA.height;
                   }else if (collision === COL_RIGHT){
                     eA.x = eB.x - eA.width;
                   }else if (collision === COL_LEFT){
                     eA.x = eB.x + eB.width;
                   }
+                  if(eA === level.playerEntity) {
 
-                  //This means that we can jump or bounce on the surface
-                  if(eB.collisionFactorY < 0) {
-                    eA.canJump = true;
+                    //This means that we can jump or bounce on the surface
+                    if(eB.collisionFactorY < 0) {
+                      eA.canJump = true;
+                    }
+
+                    if(eB.isKiller) {
+                        eA.isKilled = true;
+                    }
+
+                    gameIsWon = eB.isFinisher;
                   }
-
-                  if(eB.isKiller) {
-                      eA.isKilled = true;
-                  }
-
-                  gameIsWon = eB.isFinisher;
                 }
+              }
             }
+          });
         });
         return gameIsWon;
     },
