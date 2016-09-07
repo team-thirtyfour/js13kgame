@@ -7,8 +7,13 @@ const checkCollision = (eA, eB) => {
     const collides =  !((eA.x >= eB.x + eB.width) || (eA.x + eA.width <= eB.x) || (eA.y >= eB.y + eB.height) || (eA.y + eA.height <= eB.y));
     if(collides){
 
+      /*if(eA.collider && eB.collider) alert(eA.x +  '<' + eB.x + '&&' + eA.x + '+' + eA.width +  '>' + eB.x);
+      if(eA.x < eB.x && eA.x + eA.width >= eB.x) return COL_RIGHT;
+      if(eA.x >= eB.x + eB.width && eA.x < eB.x + eB.width) return COL_LEFT;
+      if(eA.y < eB.y && eA.y + eA.height > eB.y) return COL_BOTTOM;
+      if(eA.y < eB.y + eB.height && eA.y + eA.height < eB.y + eB.height) return COL_TOP;*/
+
       if(eA.x > eB.x && eA.y > eB.y){
-                  alert(eB.y + '+' + eB.height + '>' + eA.y +  '-' + eA.height);
         if(eB.y + eB.height > eA.y){
           return COL_TOP;
         }else{
@@ -57,7 +62,6 @@ export default {
               if(eA.collider) {
                 const collision = checkCollision(eA, eB);
                 if(collision !== undefined){
-                  alert(collision);
                   if(collision === COL_BOTTOM){
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
@@ -67,7 +71,7 @@ export default {
                     eA.velY *= eB.collisionFactorY;
                     eA.y = eB.y + eB.height;
                   }else if (collision === COL_RIGHT){
-                    eA.x = eB.x - eA.width;
+                    eA.x = eB.x - eA.widht;
                   }else if (collision === COL_LEFT){
                     eA.x = eB.x + eB.width;
                   }
