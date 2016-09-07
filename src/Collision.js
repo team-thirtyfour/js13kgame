@@ -8,13 +8,14 @@ const checkCollision = (eA, eB) => {
     if(collides){
 
       if(eA.x > eB.x && eA.y > eB.y){
-        if(eB.y > eA.y - eA.height){
+                  alert(eB.y + '+' + eB.height + '>' + eA.y +  '-' + eA.height);
+        if(eB.y + eB.height > eA.y){
           return COL_TOP;
         }else{
           return COL_LEFT;
         }
       }else if (eA.x < eB.x && eA.y > eB.y){
-          if(eB.y > eA.y - eA.height){
+          if(eB.y + eB.height  > eA.y){
             return COL_TOP;
           }else{
             return COL_RIGHT;
@@ -56,6 +57,7 @@ export default {
               if(eA.collider) {
                 const collision = checkCollision(eA, eB);
                 if(collision !== undefined){
+                  alert(collision);
                   if(collision === COL_BOTTOM){
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
@@ -63,7 +65,7 @@ export default {
                   }else if (collision === COL_TOP){
                     eA.velX *= eB.collisionFactorX;
                     eA.velY *= eB.collisionFactorY;
-                    eA.y = eB.y + eA.height;
+                    eA.y = eB.y + eB.height;
                   }else if (collision === COL_RIGHT){
                     eA.x = eB.x - eA.width;
                   }else if (collision === COL_LEFT){
