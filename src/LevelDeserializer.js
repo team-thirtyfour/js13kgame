@@ -56,7 +56,7 @@ const parse = (level) => {
             case 'T':
                 return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', false, false, false, false, false);
             case 'T_C':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.RECT, 'violet', true, false, false, false, true);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0,0, -0.5, FORMS.RECT, 'violet', true, false, false, false, true);
             case 'G':
                 return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', false, false, false, true, false);
             case 'F':
