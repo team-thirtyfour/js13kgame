@@ -1,5 +1,5 @@
-//LEFT=37, UP=38, RIGHT=39
-let keys = [false, false, false];
+//LEFT=37, UP=38, RIGHT=39, DOWN=40
+let keys = [false, false, false, false];
 
 const keyHandler = (val) => {
     return (e) => {
@@ -28,5 +28,8 @@ export default (level) => {
     // permit to go right or left AND jump
     if(keys[1] && e.canJump){
         e.velY += JUMP;
+    }
+    if(keys[3] && e.canJump){
+        e.velY -= JUMP;
     }
 };
