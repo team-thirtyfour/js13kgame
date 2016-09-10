@@ -104,11 +104,14 @@ export default {
         return e.isKilled || isOffScreen(e);
     },
     garbageOffScreenEntities: (level) => {
+      let isRemoved = false;
       for (let i = level.entities.length - 1; i > -1; i--){
         const e = level.entities[i];
         if(isOffScreen(e)){
           level.entities.splice(level.entities.indexOf(e), 1);
+          isRemoved = true;
         }
       }
+      return isRemoved;
     }
 };

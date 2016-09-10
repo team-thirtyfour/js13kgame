@@ -14,7 +14,7 @@ const loose = () => {
 
 const start = () => {
     const level = LevelDeserializer.level();
-    Console(level);
+    Console.init(level);
     MainLoop(level, win, loose);
 };
 

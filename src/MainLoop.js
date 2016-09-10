@@ -18,10 +18,12 @@ export default (level, onGameFinished, onGameOver) => {
         const now = Date.now();
         const deltaTime = (now - lastTime) / 1000.0;
 
-        Collision.garbageOffScreenEntities(level);
+        if(Collision.garbageOffScreenEntities(level)) {
+          Console.init(level);
+        }
 
-        
-        Console(level);
+
+        Console.run(level);
 
         if(Collision.checkGameOver(level) && lastTime > 0) {
           return onGameOver();
@@ -32,7 +34,7 @@ export default (level, onGameFinished, onGameOver) => {
             Keyboard(level);
             Physics.update(level, deltaTime);
         }
-        
+
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {
             return onGameFinished();
