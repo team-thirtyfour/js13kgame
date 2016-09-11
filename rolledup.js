@@ -11,7 +11,7 @@ var Level = (entities, gravity) => {
     };
 };
 
-var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isPlayer, isKiller, isFinisher, collider, childFactory) => {
+var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isPlayer, isKiller, isFinisher, collider, inConsole, isSelected, childFactory) => {
     return {
         x: x,
         y: y,
@@ -29,6 +29,8 @@ var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactor
         isFinisher: isFinisher,
         childFactory: childFactory,
         collider: collider,
+        inConsole: inConsole,
+        isSelected: isSelected,
         isKilled: false,
         canJump: false
     };
@@ -46,7 +48,12 @@ let needToDrawStatic = true;
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
     const relative = compute(canvas, entity);
-    ctx.fillStyle = entity.color;
+    if(entity.isSelected) {
+      ctx.fillStyle = 'blue';
+    }
+    else {
+      ctx.fillStyle = entity.color;
+    }
     ctx.beginPath();
     if(entity.forme === FORMS.RECT) {
         ctx.rect(relative.x, relative.y, relative.width, relative.height);
@@ -159,19 +166,19 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', true, true, false, false, true);
+                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', true, true, false, false, true, false, false);
             case 'M':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', false, false, false, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', false, false, false, false, false, false, false);
             case 'T':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', false, false, false, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', false, false, false, false, false, false, false);
             case 'T_C':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0,0, -0.5, FORMS.RECT, 'violet', true, false, false, false, true);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0,0, -0.5, FORMS.RECT, 'violet', true, false, false, false, true, false, false);
             case 'G':
-                return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', false, false, false, true, false);
+                return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', false, false, false, true, false, false, false);
             case 'F':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.TRIANGLE_DOWN, 'orange', false, false, true, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.TRIANGLE_DOWN, 'orange', false, false, true, false, false, false, false);
             case 'A':
-                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, false, true, false, false, () => {
+                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, false, true, false, false, false, false, () => {
                     return Entity(50, 50, 0.5, 0.5, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', true, false, true, false, false);
                 });
         }
@@ -195,16 +202,124 @@ const levels = [
     [1,'J,50,10|T,0,90,95,2|G,90,5|F,55,0,10,10']
 ];
 
-var Console = (level) => {
+let currentSelectedEntity = 0;
 
+const newSelectedEntity = (level, entityList) => {
+	if(currentSelectedEntity !== entityList.selectedIndex) {
+		if(currentSelectedEntity !== 0) {
+			level.entities[currentSelectedEntity - 1].isSelected = false;
+		}
+		currentSelectedEntity  = entityList.selectedIndex;
+		if(currentSelectedEntity === 0) {
+			changeEntityInput(
+				0,
+				0,
+				0,
+				0,
+				false,
+				false
+			);
+		}
+		else {
+			let selectedEntity = level.entities[currentSelectedEntity - 1];
+			selectedEntity.isSelected = true;
+			changeEntityInput(
+				selectedEntity.x,
+				selectedEntity.y,
+				selectedEntity.width,
+				selectedEntity.height,
+				selectedEntity.isMovable,
+				selectedEntity.collider
+			);
+		}
+	}
+};
+
+const changeEntityInput = (x, y, width, height, isMovable, collider) => {
+	document.getElementById('xInput').value = x;
+	document.getElementById('yInput').value = y;
+	document.getElementById('widthInput').value = width;
+	document.getElementById('heightInput').value = height;
+	document.getElementById('isMovableCheckbox').checked = isMovable;
+	document.getElementById('colliderCheckbox').checked = collider;
+};
+
+const runConsole = (level) => {
 	let gravity = parseFloat(document.getElementById('gravityInput').value);
-	if(!isNaN(gravity)){
+	if(!isNaN(gravity) && level.gravity !== gravity){
 		level.gravity = gravity;
 	}
 
 	let pause = document.getElementById('pauseCheckbox').checked;
-	level.pause = pause;
+	if(level.pause !== pause) {
+			level.pause = pause;
+	}
 
+	let entityList = document.getElementById("entityList");
+	newSelectedEntity(level, entityList);
+	if(entityList.selectedIndex !== 0)
+	{
+		let selectedEntity = level.entities[entityList.selectedIndex - 1];
+		if(selectedEntity.isSelected) {
+			let x = parseFloat(document.getElementById('xInput').value);
+			let y = parseFloat(document.getElementById('yInput').value);
+			let width = parseFloat(document.getElementById('widthInput').value);
+			let height = parseFloat(document.getElementById('heightInput').value);
+			let isMovable = document.getElementById('isMovableCheckbox').checked;
+			let collider = document.getElementById('colliderCheckbox').checked;
+
+			if(x !== selectedEntity.x) {
+				selectedEntity.x = x;
+			}
+			if(y !== selectedEntity.y) {
+				selectedEntity.y = y;
+			}
+			if(width !== selectedEntity.width) {
+				selectedEntity.width = width;
+			}
+			if(height !== selectedEntity.height) {
+				selectedEntity.height = height;
+			}
+			if(isMovable !== selectedEntity.isMovable) {
+				selectedEntity.isMovable = isMovable;
+			}
+			if(collider !== selectedEntity.collider) {
+				selectedEntity.collider = collider;
+			}
+		}
+	}
+};
+
+var Console = {
+	init: (level) => {
+		let i = 0;
+		let entityList = document.getElementById("entityList");
+		for (let j=entityList.length; j>=0; j--){
+			entityList.remove(j);
+		}
+		let option = document.createElement("option");
+		option.text = '';
+		entityList.add(option);
+		level.entities.forEach(() => {
+			let option = document.createElement("option");
+			option.text = i;
+			entityList.add(option);
+			i++;
+		});
+		currentSelectedEntity = 0;
+		changeEntityInput(
+			0,
+			0,
+			0,
+			0,
+			false,
+			false
+		);
+		runConsole(level);
+	},
+	run: (level) => {
+		runConsole(level);
+	}
 };
 
 var Physics = {
@@ -235,33 +350,6 @@ const checkCollision = (eA, eB) => {
       if(dRight < dTop && dRight < dBot) {return COL_RIGHT;}
       if(dTop < dBot) {return COL_TOP;}
       return COL_BOTTOM;
-
-      /*
-
-      let w = 0.5 * (eA.width + eB.width);
-      let h = 0.5 * (eA.height + eB.height);
-      let dx = (eA.x + (eA.width / 2.0)) - (eB.x + (eB.width / 2.0));
-      let dy = (eA.y + (eA.height / 2.0)) - (eB.y + (eB.height / 2.0));
-
-      let wy = w * dy;
-      let hx = h * dx;
-
-      if (wy > hx) {
-        if (wy > -hx){
-          return COL_TOP;
-        }
-        else{
-          return COL_LEFT;
-        }
-      }
-      else {
-        if (wy > -hx) {
-          return COL_RIGHT;
-        }
-        else {
-          return COL_BOTTOM;
-        }
-      }*/
     }
     return undefined;
 };
@@ -324,12 +412,15 @@ var Collision = {
         return e.isKilled || isOffScreen(e);
     },
     garbageOffScreenEntities: (level) => {
+      let isRemoved = false;
       for (let i = level.entities.length - 1; i > -1; i--){
         const e = level.entities[i];
         if(isOffScreen(e)){
           level.entities.splice(level.entities.indexOf(e), 1);
+          isRemoved = true;
         }
       }
+      return isRemoved;
     }
 };
 
@@ -383,10 +474,12 @@ var MainLoop = (level, onGameFinished, onGameOver) => {
         const now = Date.now();
         const deltaTime = (now - lastTime) / 1000.0;
 
-        Collision.garbageOffScreenEntities(level);
+        if(Collision.garbageOffScreenEntities(level)) {
+          Console.init(level);
+        }
 
-        
-        Console(level);
+
+        Console.run(level);
 
         if(Collision.checkGameOver(level) && lastTime > 0) {
           return onGameOver();
@@ -397,7 +490,7 @@ var MainLoop = (level, onGameFinished, onGameOver) => {
             Keyboard(level);
             Physics.update(level, deltaTime);
         }
-        
+
         const gameIsWin = Collision.check(level);
         if(gameIsWin) {
             return onGameFinished();
@@ -439,7 +532,7 @@ const loose = () => {
 
 const start = () => {
     const level = LevelDeserializer.level();
-    Console(level);
+    Console.init(level);
     MainLoop(level, win, loose);
 };
 
