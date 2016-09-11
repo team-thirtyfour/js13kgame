@@ -56,9 +56,9 @@ export default {
     render: (level) => {
         if(needToDrawStatic) {
             needToDrawStatic = false;
-            draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
+            draw(canvasStatic, level.entities.filter((e) => e.isStatic));
         }
-        draw(canvasMovable, level.entities.filter((e) => e.isMovable));
+        draw(canvasMovable, level.entities.filter((e) => !e.isStatic));
     }
 };
 

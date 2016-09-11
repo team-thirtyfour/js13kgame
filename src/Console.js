@@ -77,7 +77,18 @@ const runConsole = (level) => {
 				selectedEntity.height = height;
 			}
 			if(isMovable !== selectedEntity.isMovable) {
+				console.log('oh');
 				selectedEntity.isMovable = isMovable;
+				if(isMovable) {
+					level.movableEntities.push(selectedEntity);
+				}
+				else {
+					for(let i = 0; i < level.movableEntities.length; i++) {
+						if(level.movableEntities[i] === selectedEntity) {
+							level.movableEntities.splice(i,1);
+						}
+					}
+				}
 			}
 			if(collider !== selectedEntity.collider) {
 				selectedEntity.collider = collider;
