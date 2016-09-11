@@ -10,10 +10,17 @@
     <!-- endinject -->
 <body>
 
-Gravity: <input id="gravityInput" value="1" type="number"></input>
-Pause: <input id="pauseCheckbox" value="false" type="checkbox"></input>
-Entities: <select id="entityList"></select>
-
+<form id = "formInput" change = "false">
+  Gravity: <input id="gravityInput" value="1" type="number"></input>
+  Pause: <input id="pauseCheckbox" value="false" type="checkbox"></input>
+  Entities: <select id="entityList"></select>
+  X: <input id="xInput" value="0" type="number"></input>
+  Y: <input id="yInput" value="0" type="number"></input>
+  Width: <input id="widthInput" value="0" type="number"></input>
+  Height: <input id="heightInput" value="0" type="number"></input>
+  IsMovable: <input id="isMovableCheckbox" value="false" type="checkbox"></input>
+  Collider: <input id="colliderCheckbox" value="false" type="checkbox"></input>
+</form>
 </body>
     <!-- inject:script:js -->
     <!-- contents of js will be injected here -->

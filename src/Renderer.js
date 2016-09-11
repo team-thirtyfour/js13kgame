@@ -10,7 +10,12 @@ let needToDrawStatic = true;
 const render = (canvas, ctx, entity) => {
     //TODO simple implementation, change me with entity form and color
     const relative = compute(canvas, entity);
-    ctx.fillStyle = entity.color;
+    if(entity.isSelected) {
+      ctx.fillStyle = 'blue';
+    }
+    else {
+      ctx.fillStyle = entity.color;
+    }
     ctx.beginPath();
     if(entity.forme === FORMS.RECT) {
         ctx.rect(relative.x, relative.y, relative.width, relative.height);

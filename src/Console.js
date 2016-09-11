@@ -1,17 +1,88 @@
+let currentSelectedEntity = 0;
+
+const newSelectedEntity = (level, entityList) => {
+	if(currentSelectedEntity !== entityList.selectedIndex) {
+		if(currentSelectedEntity !== 0) {
+			level.entities[currentSelectedEntity - 1].isSelected = false;
+		}
+		currentSelectedEntity  = entityList.selectedIndex;
+		if(currentSelectedEntity === 0) {
+			changeEntityInput(
+				0,
+				0,
+				0,
+				0,
+				false,
+				false
+			);
+		}
+		else {
+			let selectedEntity = level.entities[currentSelectedEntity - 1];
+			selectedEntity.isSelected = true;
+			changeEntityInput(
+				selectedEntity.x,
+				selectedEntity.y,
+				selectedEntity.width,
+				selectedEntity.height,
+				selectedEntity.isMovable,
+				selectedEntity.collider
+			);
+		}
+	}
+};
+
+const changeEntityInput = (x, y, width, height, isMovable, collider) => {
+	document.getElementById('xInput').value = x;
+	document.getElementById('yInput').value = y;
+	document.getElementById('widthInput').value = width;
+	document.getElementById('heightInput').value = height;
+	document.getElementById('isMovableCheckbox').checked = isMovable;
+	document.getElementById('colliderCheckbox').checked = collider;
+};
+
 const runConsole = (level) => {
 	let gravity = parseFloat(document.getElementById('gravityInput').value);
-	if(!isNaN(gravity)){
+	if(!isNaN(gravity) && level.gravity !== gravity){
 		level.gravity = gravity;
 	}
 
 	let pause = document.getElementById('pauseCheckbox').checked;
-	level.pause = pause;
+	if(level.pause !== pause) {
+			level.pause = pause;
+	}
 
 	let entityList = document.getElementById("entityList");
+	newSelectedEntity(level, entityList);
 	if(entityList.selectedIndex !== 0)
 	{
-		console.log(entityList.selectedIndex);
-		entityList.remove(entityList.selectedIndex);
+		let selectedEntity = level.entities[entityList.selectedIndex - 1];
+		if(selectedEntity.isSelected) {
+			let x = parseFloat(document.getElementById('xInput').value);
+			let y = parseFloat(document.getElementById('yInput').value);
+			let width = parseFloat(document.getElementById('widthInput').value);
+			let height = parseFloat(document.getElementById('heightInput').value);
+			let isMovable = document.getElementById('isMovableCheckbox').checked;
+			let collider = document.getElementById('colliderCheckbox').checked;
+
+			if(x !== selectedEntity.x) {
+				selectedEntity.x = x;
+			}
+			if(y !== selectedEntity.y) {
+				selectedEntity.y = y;
+			}
+			if(width !== selectedEntity.width) {
+				selectedEntity.width = width;
+			}
+			if(height !== selectedEntity.height) {
+				selectedEntity.height = height;
+			}
+			if(isMovable !== selectedEntity.isMovable) {
+				selectedEntity.isMovable = isMovable;
+			}
+			if(collider !== selectedEntity.collider) {
+				selectedEntity.collider = collider;
+			}
+		}
 	}
 };
 
@@ -31,9 +102,18 @@ export default {
 			entityList.add(option);
 			i++;
 		});
+		currentSelectedEntity = 0;
+		changeEntityInput(
+			0,
+			0,
+			0,
+			0,
+			false,
+			false
+		);
 		runConsole(level);
 	},
 	run: (level) => {
-			runConsole(level);
+		runConsole(level);
 	}
 };

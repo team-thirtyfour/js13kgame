@@ -15,33 +15,6 @@ const checkCollision = (eA, eB) => {
       if(dRight < dTop && dRight < dBot) {return COL_RIGHT;}
       if(dTop < dBot) {return COL_TOP;}
       return COL_BOTTOM;
-
-      /*
-
-      let w = 0.5 * (eA.width + eB.width);
-      let h = 0.5 * (eA.height + eB.height);
-      let dx = (eA.x + (eA.width / 2.0)) - (eB.x + (eB.width / 2.0));
-      let dy = (eA.y + (eA.height / 2.0)) - (eB.y + (eB.height / 2.0));
-
-      let wy = w * dy;
-      let hx = h * dx;
-
-      if (wy > hx) {
-        if (wy > -hx){
-          return COL_TOP;
-        }
-        else{
-          return COL_LEFT;
-        }
-      }
-      else {
-        if (wy > -hx) {
-          return COL_RIGHT;
-        }
-        else {
-          return COL_BOTTOM;
-        }
-      }*/
     }
     return undefined;
 };
