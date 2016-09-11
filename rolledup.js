@@ -7,6 +7,7 @@ var Level = (entities, gravity) => {
         gravity: gravity,
         movableEntities: entities.filter((e) => e.isMovable),
         playerEntity: entities.find((e) => e.isPlayer),
+        selectableEntity: entities.filter((e) => e.inConsole),
         pause: false
     };
 };
@@ -170,10 +171,12 @@ const parse = (level) => {
                 return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', false, true, true, false, false, true, false, false);
             case 'M':
                 return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', true, false, false, false, false, false, false, false);
+            case 'M_C':
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', false, false, false, false, false, false, true, false);
             case 'T':
                 return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', true, false, false, false, false, false, false, false);
             case 'T_C':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0,0, -0.5, FORMS.RECT, 'violet', false, true, false, false, false, true, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0,0, -0.5, FORMS.RECT, 'violet', false, true, false, false, false, true, true, false);
             case 'G':
                 return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', true, false, false, false, true, false, false, false);
             case 'F':
@@ -208,7 +211,7 @@ let currentSelectedEntity = 0;
 const newSelectedEntity = (level, entityList) => {
 	if(currentSelectedEntity !== entityList.selectedIndex) {
 		if(currentSelectedEntity !== 0) {
-			level.entities[currentSelectedEntity - 1].isSelected = false;
+			level.selectableEntity[currentSelectedEntity - 1].isSelected = false;
 		}
 		currentSelectedEntity  = entityList.selectedIndex;
 		if(currentSelectedEntity === 0) {
@@ -222,7 +225,7 @@ const newSelectedEntity = (level, entityList) => {
 			);
 		}
 		else {
-			let selectedEntity = level.entities[currentSelectedEntity - 1];
+			let selectedEntity = level.selectableEntity[currentSelectedEntity - 1];
 			selectedEntity.isSelected = true;
 			changeEntityInput(
 				selectedEntity.x,
@@ -260,7 +263,7 @@ const runConsole = (level) => {
 	newSelectedEntity(level, entityList);
 	if(entityList.selectedIndex !== 0)
 	{
-		let selectedEntity = level.entities[entityList.selectedIndex - 1];
+		let selectedEntity = level.selectableEntity[entityList.selectedIndex - 1];
 		if(selectedEntity.isSelected) {
 			let x = parseFloat(document.getElementById('xInput').value);
 			let y = parseFloat(document.getElementById('yInput').value);
@@ -269,20 +272,19 @@ const runConsole = (level) => {
 			let isMovable = document.getElementById('isMovableCheckbox').checked;
 			let collider = document.getElementById('colliderCheckbox').checked;
 
-			if(x !== selectedEntity.x) {
+			if(!isNaN(x) && x !== selectedEntity.x) {
 				selectedEntity.x = x;
 			}
-			if(y !== selectedEntity.y) {
+			if(!isNaN(y) && y !== selectedEntity.y) {
 				selectedEntity.y = y;
 			}
-			if(width !== selectedEntity.width) {
+			if(!isNaN(width) && width !== selectedEntity.width) {
 				selectedEntity.width = width;
 			}
-			if(height !== selectedEntity.height) {
+			if(!isNaN(height) && height !== selectedEntity.height) {
 				selectedEntity.height = height;
 			}
 			if(isMovable !== selectedEntity.isMovable) {
-				console.log('oh');
 				selectedEntity.isMovable = isMovable;
 				if(isMovable) {
 					level.movableEntities.push(selectedEntity);
@@ -312,7 +314,7 @@ var Console = {
 		let option = document.createElement("option");
 		option.text = '';
 		entityList.add(option);
-		level.entities.forEach(() => {
+		level.selectableEntity.forEach(() => {
 			let option = document.createElement("option");
 			option.text = i;
 			entityList.add(option);
@@ -327,6 +329,7 @@ var Console = {
 			false,
 			false
 		);
+		document.getElementById('gravityInput').value = level.gravity;
 		runConsole(level);
 	},
 	run: (level) => {
