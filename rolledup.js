@@ -11,7 +11,7 @@ var Level = (entities, gravity) => {
     };
 };
 
-var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isMovable, isPlayer, isKiller, isFinisher, collider, inConsole, isSelected, childFactory) => {
+var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactorY, forme, color, isStatic, isMovable, isPlayer, isKiller, isFinisher, collider, inConsole, isSelected, childFactory) => {
     return {
         x: x,
         y: y,
@@ -23,6 +23,7 @@ var Entity = (x, y, width, height, velX, velY, collisionFactorX, collisionFactor
         collisionFactorY: collisionFactorY,
         forme: forme,
         color: color,
+        isStatic : isStatic,
         isMovable: isMovable,
         isPlayer: isPlayer,
         isKiller: isKiller,
@@ -94,9 +95,9 @@ var Renderer = {
     render: (level) => {
         if(needToDrawStatic) {
             needToDrawStatic = false;
-            draw(canvasStatic, level.entities.filter((e) => !e.isMovable));
+            draw(canvasStatic, level.entities.filter((e) => e.isStatic));
         }
-        draw(canvasMovable, level.entities.filter((e) => e.isMovable));
+        draw(canvasMovable, level.entities.filter((e) => !e.isStatic));
     }
 };
 
@@ -166,20 +167,20 @@ const parse = (level) => {
         var str = e.split(',');
         switch(str[0]){
             case 'J':
-                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', true, true, false, false, true, false, false);
+                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'red', false, true, true, false, false, true, false, false);
             case 'M':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', false, false, false, false, false, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.1, FORMS.RECT, 'grey', true, false, false, false, false, false, false, false);
             case 'T':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', false, false, false, false, false, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, -0.5, FORMS.RECT, 'blue', true, false, false, false, false, false, false, false);
             case 'T_C':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0,0, -0.5, FORMS.RECT, 'violet', true, false, false, false, true, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0,0, -0.5, FORMS.RECT, 'violet', false, true, false, false, false, true, false, false);
             case 'G':
-                return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', false, false, false, true, false, false, false);
+                return Entity(+str[1], +str[2], 3, 5, 0, 0, 0, 0, FORMS.RECT, 'violet', true, false, false, false, true, false, false, false);
             case 'F':
-                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.TRIANGLE_DOWN, 'orange', false, false, true, false, false, false, false);
+                return Entity(+str[1], +str[2], +str[3], +str[4], 0, 0, 0, 0, FORMS.TRIANGLE_DOWN, 'orange', false, false, false, true, false, false, false, false);
             case 'A':
-                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, false, true, false, false, false, false, () => {
-                    return Entity(50, 50, 0.5, 0.5, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', true, false, true, false, false);
+                return Entity(+str[1], +str[2], 2, 2, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', true, false, false, true, false, false, false, false, () => {
+                    return Entity(50, 50, 0.5, 0.5, 0, 0, 0, 0, FORMS.CIRCLE, 'pink', false, true, false, true, false, false);
                 });
         }
 
@@ -281,7 +282,18 @@ const runConsole = (level) => {
 				selectedEntity.height = height;
 			}
 			if(isMovable !== selectedEntity.isMovable) {
+				console.log('oh');
 				selectedEntity.isMovable = isMovable;
+				if(isMovable) {
+					level.movableEntities.push(selectedEntity);
+				}
+				else {
+					for(let i = 0; i < level.movableEntities.length; i++) {
+						if(level.movableEntities[i] === selectedEntity) {
+							level.movableEntities.splice(i,1);
+						}
+					}
+				}
 			}
 			if(collider !== selectedEntity.collider) {
 				selectedEntity.collider = collider;
