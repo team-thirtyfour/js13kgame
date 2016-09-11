@@ -3,7 +3,7 @@ let currentSelectedEntity = 0;
 const newSelectedEntity = (level, entityList) => {
 	if(currentSelectedEntity !== entityList.selectedIndex) {
 		if(currentSelectedEntity !== 0) {
-			level.entities[currentSelectedEntity - 1].isSelected = false;
+			level.selectableEntity[currentSelectedEntity - 1].isSelected = false;
 		}
 		currentSelectedEntity  = entityList.selectedIndex;
 		if(currentSelectedEntity === 0) {
@@ -17,7 +17,7 @@ const newSelectedEntity = (level, entityList) => {
 			);
 		}
 		else {
-			let selectedEntity = level.entities[currentSelectedEntity - 1];
+			let selectedEntity = level.selectableEntity[currentSelectedEntity - 1];
 			selectedEntity.isSelected = true;
 			changeEntityInput(
 				selectedEntity.x,
@@ -55,7 +55,7 @@ const runConsole = (level) => {
 	newSelectedEntity(level, entityList);
 	if(entityList.selectedIndex !== 0)
 	{
-		let selectedEntity = level.entities[entityList.selectedIndex - 1];
+		let selectedEntity = level.selectableEntity[entityList.selectedIndex - 1];
 		if(selectedEntity.isSelected) {
 			let x = parseFloat(document.getElementById('xInput').value);
 			let y = parseFloat(document.getElementById('yInput').value);
@@ -64,20 +64,19 @@ const runConsole = (level) => {
 			let isMovable = document.getElementById('isMovableCheckbox').checked;
 			let collider = document.getElementById('colliderCheckbox').checked;
 
-			if(x !== selectedEntity.x) {
+			if(!isNaN(x) && x !== selectedEntity.x) {
 				selectedEntity.x = x;
 			}
-			if(y !== selectedEntity.y) {
+			if(!isNaN(y) && y !== selectedEntity.y) {
 				selectedEntity.y = y;
 			}
-			if(width !== selectedEntity.width) {
+			if(!isNaN(width) && width !== selectedEntity.width) {
 				selectedEntity.width = width;
 			}
-			if(height !== selectedEntity.height) {
+			if(!isNaN(height) && height !== selectedEntity.height) {
 				selectedEntity.height = height;
 			}
 			if(isMovable !== selectedEntity.isMovable) {
-				console.log('oh');
 				selectedEntity.isMovable = isMovable;
 				if(isMovable) {
 					level.movableEntities.push(selectedEntity);
@@ -107,7 +106,7 @@ export default {
 		let option = document.createElement("option");
 		option.text = '';
 		entityList.add(option);
-		level.entities.forEach(() => {
+		level.selectableEntity.forEach(() => {
 			let option = document.createElement("option");
 			option.text = i;
 			entityList.add(option);
@@ -122,6 +121,7 @@ export default {
 			false,
 			false
 		);
+		document.getElementById('gravityInput').value = level.gravity;
 		runConsole(level);
 	},
 	run: (level) => {
